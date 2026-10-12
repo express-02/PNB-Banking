@@ -9,6 +9,46 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* Currency toggle pill inside the balance card */
+  .cur-toggle {
+    display: inline-flex;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 2px;
+    position: relative;
+    z-index: 1;
+  }
+  .cur-btn {
+    background: transparent;
+    border: none;
+    color: #a8c1e6;
+    font-family: inherit;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    padding: 5px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .cur-btn:hover { color: #fff; }
+  .cur-btn.active {
+    background: #fff;
+    color: var(--navy);
+    box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  }
+  .bh-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    position: relative;
+    z-index: 1;
+  }
+</style>
 </head>
 <body>
 
@@ -52,7 +92,13 @@
       </div>
     </div>
 
-    <div class="bh-label">Available Balance</div>
+    <div class="bh-label-row">
+      <div class="bh-label">Available Balance</div>
+      <div class="cur-toggle" id="curToggle">
+        <button class="cur-btn active" data-cur="USD">USD</button>
+        <button class="cur-btn" data-cur="PHP">PHP</button>
+      </div>
+    </div>
     <div class="bh-amount-row">
       <div class="bh-amount" id="totalBalance">$0.00</div>
       <button class="bh-eye" id="eyeToggle" title="Hide / show">
@@ -144,14 +190,34 @@
 <script src="drawer.js"></script>
 
 <script>
+// ============================================================
+// Fixed exchange rate — change here if you want a new rate
+// ============================================================
+const FX_RATE_PHP = 57.00;   // 1 USD = 57.00 PHP
+
 let currentUid = null, userProfile = null;
 let accountsCache = [], savesCache = [], txOut = [], txIn = [];
 let unsubAccounts, unsubSaves, unsubTxOut, unsubTxIn;
 let balanceHidden = false;
+let currentCurrency = 'USD';   // 'USD' or 'PHP'
 
 const NY_TZ = 'America/New_York';
 
-// ===== Live clock — New York time =====
+// ============================================================
+// Currency formatter — reads currentCurrency
+// ============================================================
+function fmt(usdAmount) {
+  const n = Number(usdAmount || 0);
+  if (currentCurrency === 'PHP') {
+    const php = n * FX_RATE_PHP;
+    return '₱' + php.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// ============================================================
+// Live clock — New York time
+// ============================================================
 function updateClock() {
   const now = new Date();
   document.getElementById('liveClock').textContent = new Intl.DateTimeFormat('en-US', {
@@ -172,7 +238,9 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ===== Eye toggle =====
+// ============================================================
+// Eye toggle
+// ============================================================
 document.getElementById('eyeToggle').addEventListener('click', () => {
   balanceHidden = !balanceHidden;
   document.getElementById('eyeIcon').className = balanceHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
@@ -180,7 +248,37 @@ document.getElementById('eyeToggle').addEventListener('click', () => {
   renderBalances();
 });
 
-// ===== Auth =====
+// ============================================================
+// Currency toggle
+// ============================================================
+document.querySelectorAll('.cur-btn').forEach(b => {
+  b.addEventListener('click', async () => {
+    const cur = b.dataset.cur;
+    if (cur === currentCurrency) return;
+    currentCurrency = cur;
+
+    // Update active pill
+    document.querySelectorAll('.cur-btn').forEach(x => {
+      x.classList.toggle('active', x.dataset.cur === cur);
+    });
+
+    // Re-render
+    updateTotalBalance();
+    renderBalances();
+    renderRecent();
+
+    // Persist preference
+    if (currentUid) {
+      try {
+        await db.collection('swifttrust_users').doc(currentUid).update({ currency: cur });
+      } catch (e) { console.error('save currency pref', e); }
+    }
+  });
+});
+
+// ============================================================
+// Auth
+// ============================================================
 auth.onAuthStateChanged(async (user) => {
   if (!user) { window.location.href = 'login.html'; return; }
   const snap = await db.collection('swifttrust_users').doc(user.uid).get();
@@ -190,6 +288,12 @@ auth.onAuthStateChanged(async (user) => {
 
   currentUid = user.uid;
   userProfile = data;
+
+  // Apply saved currency preference
+  currentCurrency = (data.currency === 'PHP') ? 'PHP' : 'USD';
+  document.querySelectorAll('.cur-btn').forEach(x => {
+    x.classList.toggle('active', x.dataset.cur === currentCurrency);
+  });
 
   const firstName = (data.fullName || '').split(' ')[0] || 'there';
   document.getElementById('greetName').textContent = firstName;
@@ -203,7 +307,6 @@ auth.onAuthStateChanged(async (user) => {
 function startListeners() {
   if (unsubAccounts) return;
 
-  // Accounts
   unsubAccounts = db.collection('swifttrust_accounts')
     .where('ownerId', '==', currentUid)
     .onSnapshot(snap => {
@@ -218,7 +321,6 @@ function startListeners() {
       renderPrimaryAccount();
     }, err => console.error('accounts', err));
 
-  // Saves
   unsubSaves = db.collection('swifttrust_saves')
     .where('ownerId', '==', currentUid)
     .onSnapshot(snap => {
@@ -227,7 +329,6 @@ function startListeners() {
       renderBalances();
     }, err => console.error('saves', err));
 
-  // Outgoing transactions — NO orderBy (avoids composite index)
   unsubTxOut = db.collection('swifttrust_transactions')
     .where('fromUid', '==', currentUid)
     .onSnapshot(snap => {
@@ -237,7 +338,6 @@ function startListeners() {
       updateNotifDot();
     }, err => console.error('txOut', err));
 
-  // Incoming transactions — NO orderBy
   unsubTxIn = db.collection('swifttrust_transactions')
     .where('toUid', '==', currentUid)
     .onSnapshot(snap => {
@@ -258,7 +358,7 @@ function updateNotifDot() {
 
 function updateTotalBalance() {
   const total = accountsCache.reduce((s, a) => s + Number(a.balance || 0), 0);
-  document.getElementById('totalBalance').textContent = balanceHidden ? '••••••' : stbMoney(total);
+  document.getElementById('totalBalance').textContent = balanceHidden ? '••••••' : fmt(total);
 }
 
 function renderPrimaryAccount() {
@@ -284,7 +384,7 @@ function renderBalances() {
         <div class="balance-tile" style="cursor:pointer;" onclick="location.href='move-money.html?from=${a.type}'">
           <div class="balance-tile-icon ${iconCls}"><i class="fas ${icon}"></i></div>
           <div class="balance-tile-label">${label}</div>
-          <div class="balance-tile-amount">${balanceHidden ? '••••••' : stbMoney(a.balance)}</div>
+          <div class="balance-tile-amount">${balanceHidden ? '••••••' : fmt(a.balance)}</div>
           <div class="balance-tile-sub">•••• ${String(a.accountNumber || '').slice(-4)} · ${sub}</div>
         </div>
       `;
@@ -303,7 +403,7 @@ function renderBalances() {
       <div class="balance-tile" style="cursor:pointer;" onclick="location.href='save.html'">
         <div class="balance-tile-icon locked"><i class="fas fa-lock"></i></div>
         <div class="balance-tile-label">Locked Save</div>
-        <div class="balance-tile-amount">${balanceHidden ? '••••••' : stbMoney(totalLocked)}</div>
+        <div class="balance-tile-amount">${balanceHidden ? '••••••' : fmt(totalLocked)}</div>
         <div class="balance-tile-sub">${lockedSaves.length} lock${lockedSaves.length === 1 ? '' : 's'} · next matures in ${days}d</div>
       </div>
     `;
@@ -374,7 +474,8 @@ function renderRecent() {
     }
 
     const color = (sign === '+' || sign === '↔') ? 'var(--green)' : 'var(--ink)';
-    const amtDisplay = isMove ? stbMoney(t.amount) : (sign + stbMoney(t.amount));
+    const amtDisplay = isMove ? fmt(t.amount) : (sign + fmt(t.amount));
+    const curTag = currentCurrency === 'PHP' ? 'PHP' : 'USD';
 
     return `
       <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);">
@@ -383,7 +484,7 @@ function renderRecent() {
         </div>
         <div style="flex:1;min-width:0;">
           <div style="font-size:.88rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${desc}</div>
-          <div style="font-size:.72rem;color:var(--text-faint);">${stbDate(t.createdAt)}</div>
+          <div style="font-size:.72rem;color:var(--text-faint);">${stbDate(t.createdAt)} · ${curTag}</div>
         </div>
         <div style="font-size:.9rem;font-weight:700;color:${color};white-space:nowrap;">${amtDisplay}</div>
       </div>`;
