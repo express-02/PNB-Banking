@@ -8,6 +8,64 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* Currency toggle — bigger, clearly clickable */
+  .amt-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .amt-row input {
+    flex: 1;
+    min-width: 0;
+    min-height: 46px;
+  }
+  .cur-toggle {
+    display: flex;
+    background: var(--bg);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 3px;
+    gap: 2px;
+    flex-shrink: 0;
+    height: 46px;
+    box-sizing: border-box;
+  }
+  .cur-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-faint);
+    font-family: inherit;
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    padding: 0 16px;
+    min-width: 52px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cur-btn:hover { color: var(--text); }
+  .cur-btn.active {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(37,99,235,.25);
+  }
+
+  .conv-note {
+    font-size: .74rem;
+    color: var(--text-faint);
+    margin-top: 6px;
+    display: none;
+    align-items: center;
+    gap: 6px;
+  }
+  .conv-note i { color: var(--blue); font-size: .72rem; }
+  .conv-note.show { display: flex; }
+</style>
 </head>
 <body>
 
@@ -27,7 +85,6 @@
 
   <div class="mob-pad" style="padding-top:18px;">
 
-    <!-- SwiftTrust suggestion banner -->
     <a href="transfer-internal.html" class="card" style="display:block;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;border:none;text-decoration:none;padding:16px 18px;margin-bottom:16px;">
       <div style="display:flex;gap:12px;align-items:center;">
         <div style="width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center;flex-shrink:0;">
@@ -46,27 +103,15 @@
 
       <div class="field">
         <label>From account</label>
-        <select id="fromAccount" required><option value="">Select account</option></select>
+        <select id="fromAccount" required>
+          <option value="">Loading your accounts…</option>
+        </select>
       </div>
 
       <div class="field">
         <label>Recipient bank</label>
-        <select id="toBank" required>
-          <option value="">Select bank</option>
-          <option>Bank of America</option>
-          <option>Capital One</option>
-          <option>Chase</option>
-          <option>Citibank</option>
-          <option>Discover</option>
-          <option>Fifth Third Bank</option>
-          <option>Navy Federal Credit Union</option>
-          <option>PNC Bank</option>
-          <option>TD Bank</option>
-          <option>Truist</option>
-          <option>U.S. Bank</option>
-          <option>USAA</option>
-          <option>Wells Fargo</option>
-        </select>
+        <input type="text" id="toBank" placeholder="Enter bank name (e.g. BPI, Chase, Maya)" required maxlength="60" autocomplete="off" />
+        <div class="field-hint">Type the name of the bank you want to send to.</div>
       </div>
 
       <div class="field-row">
@@ -81,8 +126,18 @@
       </div>
 
       <div class="field">
-        <label>Amount (USD)</label>
-        <input type="number" id="amount" placeholder="0.00" min="1" step="0.01" required />
+        <label>Amount</label>
+        <div class="amt-row">
+          <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01" required inputmode="decimal" />
+          <div class="cur-toggle" id="curToggle">
+            <button type="button" class="cur-btn active" data-cur="USD">USD</button>
+            <button type="button" class="cur-btn" data-cur="PHP">PHP</button>
+          </div>
+        </div>
+        <div class="conv-note" id="convNote">
+          <i class="fas fa-arrow-right-arrow-left"></i>
+          <span id="convText">—</span>
+        </div>
       </div>
 
       <div class="field">
@@ -100,6 +155,7 @@
         <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:6px;">
           <span>Total debited</span><span id="feeTotal">$0.00</span>
         </div>
+        <div id="usdEquiv" style="display:none;font-size:.72rem;color:var(--text-faint);margin-top:8px;text-align:right;"></div>
       </div>
 
       <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
@@ -127,12 +183,13 @@
     <div class="modal-sub">Confirm the details before you continue.</div>
     <div style="background:var(--bg);border-radius:14px;padding:18px;margin-bottom:18px;">
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Recipient</span><span style="font-weight:600;font-size:.88rem;text-align:right;" id="rvRecipient">—</span></div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Bank</span><span style="font-weight:600;font-size:.88rem;" id="rvBank">—</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Bank</span><span style="font-weight:600;font-size:.88rem;text-align:right;" id="rvBank">—</span></div>
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Account</span><span style="font-weight:600;font-size:.88rem;font-family:ui-monospace,monospace;" id="rvAccount">—</span></div>
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">From</span><span style="font-weight:600;font-size:.88rem;" id="rvFrom">—</span></div>
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Amount</span><span style="font-weight:600;font-size:.88rem;" id="rvAmount">$0.00</span></div>
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Fee (3%)</span><span style="font-weight:600;font-size:.88rem;" id="rvFee">$0.00</span></div>
       <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:700;font-size:1rem;"><span>Total</span><span id="rvTotal">$0.00</span></div>
+      <div id="rvUsdNote" style="display:none;font-size:.72rem;color:var(--text-faint);text-align:right;margin-top:6px;"></div>
     </div>
     <button class="btn btn-primary btn-block btn-lg" id="reviewContinue">Confirm & continue <i class="fas fa-arrow-right"></i></button>
   </div>
@@ -191,97 +248,272 @@
 <script src="drawer.js"></script>
 
 <script>
-const FEE_RATE = 0.03;
-const $ = id => document.getElementById(id);
+console.log('[SwiftTrust] transfer-external.html loaded');
 
-let currentUid = null, userProfile = null, myAccounts = [];
-let pending = null, enteredPin = '';
+// ================ CONFIG ================
+var FEE_RATE = 0.03;
+var FX_RATE_PHP = 57.00;   // 1 USD = 57.00 PHP
 
-$('amount').addEventListener('input', updateFee);
-function updateFee() {
-  const amt = Number($('amount').value || 0);
-  const fee = amt * FEE_RATE;
-  $('feeAmount').textContent = stbMoney(amt);
-  $('feeFee').textContent = stbMoney(fee);
-  $('feeTotal').textContent = stbMoney(amt + fee);
+// ================ HELPERS ================
+function $(id) { return document.getElementById(id); }
+
+function usdFmt(n) {
+  return '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function phpFmt(n) {
+  return '₱' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
-auth.onAuthStateChanged(async (user) => {
-  if (!user) { window.location.href = 'login.html'; return; }
-  const snap = await db.collection('swifttrust_users').doc(user.uid).get();
-  if (!snap.exists) { await auth.signOut(); window.location.href = 'login.html'; return; }
-  const d = snap.data();
-  if (d.status !== 'approved') { await auth.signOut(); window.location.href = 'login.html'; return; }
-  currentUid = user.uid; userProfile = d;
+// ================ STATE ================
+var currentUid = null;
+var userProfile = null;
+var myAccounts = [];
+var pending = null;
+var enteredPin = '';
+var currentCurrency = 'USD';
 
-  const accSnap = await db.collection('swifttrust_accounts').where('ownerId', '==', user.uid).get();
-  myAccounts = [];
-  accSnap.forEach(doc => myAccounts.push({ id: doc.id, ...doc.data() }));
-  const sel = $('fromAccount');
-  sel.innerHTML = '<option value="">Select account</option>' +
-    myAccounts.map(a => `<option value="${a.id}">${a.nickname || a.type} — ••••${String(a.accountNumber).slice(-4)} (${stbMoney(a.balance)})</option>`).join('');
+console.log('[SwiftTrust] script initialized, currentCurrency =', currentCurrency);
+
+// ================ CURRENCY TOGGLE ================
+function setCurrency(cur) {
+  console.log('[SwiftTrust] setCurrency called:', cur);
+
+  if (cur === currentCurrency) {
+    console.log('[SwiftTrust] already on', cur);
+    return;
+  }
+
+  var amtEl = $('amount');
+  var raw = parseFloat(amtEl.value) || 0;
+
+  // Convert existing amount to the new currency
+  if (raw > 0) {
+    if (cur === 'PHP') {
+      amtEl.value = (raw * FX_RATE_PHP).toFixed(2);
+      console.log('[SwiftTrust] converted', raw, 'USD ->', amtEl.value, 'PHP');
+    } else {
+      amtEl.value = (raw / FX_RATE_PHP).toFixed(2);
+      console.log('[SwiftTrust] converted', raw, 'PHP ->', amtEl.value, 'USD');
+    }
+  }
+
+  currentCurrency = cur;
+
+  // Update active pill
+  var buttons = document.querySelectorAll('.cur-btn');
+  buttons.forEach(function (btn) {
+    if (btn.dataset.cur === cur) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  updateFee();
+}
+
+// Attach listeners to currency buttons
+(function attachCurrencyListeners() {
+  var buttons = document.querySelectorAll('.cur-btn');
+  console.log('[SwiftTrust] found', buttons.length, 'currency buttons');
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('[SwiftTrust] currency button clicked:', btn.dataset.cur);
+      setCurrency(btn.dataset.cur);
+    });
+  });
+})();
+
+// ================ FEE PREVIEW ================
+function updateFee() {
+  var raw = parseFloat($('amount').value) || 0;
+  var usdAmt = currentCurrency === 'PHP' ? raw / FX_RATE_PHP : raw;
+  var usdFee = usdAmt * FEE_RATE;
+  var usdTotal = usdAmt + usdFee;
+
+  var label;
+  if (currentCurrency === 'PHP') {
+    label = function (n) { return phpFmt(n * FX_RATE_PHP); };
+  } else {
+    label = function (n) { return usdFmt(n); };
+  }
+
+  $('feeAmount').textContent = label(usdAmt);
+  $('feeFee').textContent = label(usdFee);
+  $('feeTotal').textContent = label(usdTotal);
+
+  if (currentCurrency === 'PHP' && usdAmt > 0) {
+    $('usdEquiv').style.display = 'block';
+    $('usdEquiv').textContent = 'Equivalent to ' + usdFmt(usdAmt) + ' + ' + usdFmt(usdFee) + ' fee';
+    $('convNote').classList.add('show');
+    $('convText').textContent = '1 USD = ' + FX_RATE_PHP.toFixed(2) + ' PHP · ' + phpFmt(raw) + ' ≈ ' + usdFmt(usdAmt);
+  } else {
+    $('usdEquiv').style.display = 'none';
+    $('convNote').classList.remove('show');
+  }
+}
+
+// Attach input listener to amount field
+$('amount').addEventListener('input', updateFee);
+
+// ================ AUTH & ACCOUNT LOAD ================
+auth.onAuthStateChanged(async function (user) {
+  console.log('[SwiftTrust] auth state changed. user =', user ? user.uid : 'null');
+
+  if (!user) { window.location.href = 'login.html'; return; }
+
+  try {
+    var snap = await db.collection('swifttrust_users').doc(user.uid).get();
+    if (!snap.exists) {
+      console.log('[SwiftTrust] user doc not found');
+      await auth.signOut();
+      window.location.href = 'login.html';
+      return;
+    }
+    var d = snap.data();
+    console.log('[SwiftTrust] user status:', d.status);
+
+    if (d.status !== 'approved') {
+      await auth.signOut();
+      window.location.href = 'login.html';
+      return;
+    }
+
+    currentUid = user.uid;
+    userProfile = d;
+
+    // Default toggle to saved preference
+    if (d.currency === 'PHP') {
+      currentCurrency = 'PHP';
+      document.querySelectorAll('.cur-btn').forEach(function (b) {
+        if (b.dataset.cur === 'PHP') b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    }
+
+    // Load accounts
+    var accSnap = await db.collection('swifttrust_accounts').where('ownerId', '==', user.uid).get();
+    myAccounts = [];
+    accSnap.forEach(function (doc) { myAccounts.push(Object.assign({ id: doc.id }, doc.data())); });
+
+    console.log('[SwiftTrust] loaded', myAccounts.length, 'accounts');
+
+    var sel = $('fromAccount');
+    if (myAccounts.length === 0) {
+      sel.innerHTML = '<option value="">No accounts found</option>';
+    } else {
+      sel.innerHTML = '<option value="">Select account</option>' +
+        myAccounts.map(function (a) {
+          return '<option value="' + a.id + '">' +
+            (a.nickname || a.type) + ' — ••••' + String(a.accountNumber).slice(-4) +
+            ' (' + stbMoney(a.balance) + ')</option>';
+        }).join('');
+    }
+  } catch (err) {
+    console.error('[SwiftTrust] auth/load error:', err);
+  }
 });
 
-$('transferForm').addEventListener('submit', (e) => {
+// ================ STEP 1: form → review ================
+$('transferForm').addEventListener('submit', function (e) {
   e.preventDefault();
-  const a = $('alert');
+  console.log('[SwiftTrust] form submitted');
+
+  var a = $('alert');
   a.className = 'form-alert';
 
-  const fromId = $('fromAccount').value;
-  const bank = $('toBank').value;
-  const name = $('toName').value.trim();
-  const acc = $('toAccount').value.trim();
-  const amt = Number($('amount').value || 0);
-  const desc = $('description').value.trim();
+  var fromId = $('fromAccount').value;
+  var bank = $('toBank').value.trim();
+  var name = $('toName').value.trim();
+  var acc = $('toAccount').value.trim();
+  var raw = parseFloat($('amount').value) || 0;
+  var desc = $('description').value.trim();
 
   if (!fromId) { showErr('Select a source account.'); return; }
-  if (!bank) { showErr('Select the recipient bank.'); return; }
+  if (!bank) { showErr('Enter the recipient bank.'); return; }
   if (!name) { showErr('Enter the recipient name.'); return; }
   if (!acc) { showErr('Enter the recipient account number.'); return; }
-  if (amt <= 0) { showErr('Enter an amount greater than zero.'); return; }
+  if (raw <= 0) { showErr('Enter an amount greater than zero.'); return; }
 
-  const from = myAccounts.find(x => x.id === fromId);
+  var from = myAccounts.find(function (x) { return x.id === fromId; });
   if (!from) { showErr('Source account not found.'); return; }
   if (from.status === 'frozen') { showErr('This account is frozen.'); return; }
 
-  const fee = amt * FEE_RATE;
-  const total = amt + fee;
-  if (Number(from.balance || 0) < total) { showErr(`Insufficient funds. You need ${stbMoney(total)}.`); return; }
+  var usdAmt = currentCurrency === 'PHP' ? raw / FX_RATE_PHP : raw;
+  var usdFee = usdAmt * FEE_RATE;
+  var usdTotal = usdAmt + usdFee;
+
+  if (Number(from.balance || 0) < usdTotal) {
+    showErr('Insufficient funds. You need ' + usdFmt(usdTotal) + ' in your account.');
+    return;
+  }
 
   pending = {
-    fromAccountId: from.id, fromAccount: from,
-    toBank: bank, toAccountNumber: acc, toAccountName: name,
-    amount: amt, fee, total, description: desc
+    fromAccountId: from.id,
+    fromAccount: from,
+    toBank: bank,
+    toAccountNumber: acc,
+    toAccountName: name,
+    amount: usdAmt,
+    fee: usdFee,
+    total: usdTotal,
+    originalCurrency: currentCurrency,
+    originalAmount: raw,
+    description: desc
   };
+
+  var label;
+  if (currentCurrency === 'PHP') {
+    label = function (n) { return phpFmt(n * FX_RATE_PHP); };
+  } else {
+    label = function (n) { return usdFmt(n); };
+  }
 
   $('rvRecipient').textContent = name;
   $('rvBank').textContent = bank;
   $('rvAccount').textContent = acc;
   $('rvFrom').textContent = from.nickname || from.type;
-  $('rvAmount').textContent = stbMoney(amt);
-  $('rvFee').textContent = stbMoney(fee);
-  $('rvTotal').textContent = stbMoney(total);
+  $('rvAmount').textContent = label(usdAmt);
+  $('rvFee').textContent = label(usdFee);
+  $('rvTotal').textContent = label(usdTotal);
+
+  if (currentCurrency === 'PHP') {
+    $('rvUsdNote').style.display = 'block';
+    $('rvUsdNote').textContent = 'Equivalent to ' + usdFmt(usdAmt) + ' + ' + usdFmt(usdFee) + ' fee';
+  } else {
+    $('rvUsdNote').style.display = 'none';
+  }
+
   $('reviewModal').classList.add('show');
   document.body.style.overflow = 'hidden';
 });
 
-function showErr(msg) { const a = $('alert'); a.textContent = msg; a.className = 'form-alert show error'; }
+function showErr(msg) {
+  var a = $('alert');
+  a.textContent = msg;
+  a.className = 'form-alert show error';
+}
 
-$('reviewClose').addEventListener('click', () => { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; });
-$('reviewModal').addEventListener('click', e => { if (e.target.id === 'reviewModal') { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; } });
+// ================ STEP 2: review → PIN ================
+$('reviewClose').addEventListener('click', function () { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; });
+$('reviewModal').addEventListener('click', function (e) { if (e.target.id === 'reviewModal') { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; } });
 
-$('reviewContinue').addEventListener('click', () => {
+$('reviewContinue').addEventListener('click', function () {
   $('reviewModal').classList.remove('show');
   enteredPin = ''; updatePinDots();
   $('pinModal').classList.add('show');
 });
 
-$('pinClose').addEventListener('click', () => { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; });
-$('pinModal').addEventListener('click', e => { if (e.target.id === 'pinModal') { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; } });
+// ================ STEP 3: PIN ================
+$('pinClose').addEventListener('click', function () { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; });
+$('pinModal').addEventListener('click', function (e) { if (e.target.id === 'pinModal') { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; } });
 
-document.querySelectorAll('.keypad-key[data-key]').forEach(k => {
-  k.addEventListener('click', () => {
-    const key = k.dataset.key;
+document.querySelectorAll('.keypad-key[data-key]').forEach(function (k) {
+  k.addEventListener('click', function () {
+    var key = k.dataset.key;
     if (key === 'del') enteredPin = enteredPin.slice(0, -1);
     else if (enteredPin.length < 4) enteredPin += key;
     updatePinDots();
@@ -289,7 +521,12 @@ document.querySelectorAll('.keypad-key[data-key]').forEach(k => {
   });
 });
 
-function updatePinDots() { document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < enteredPin.length)); }
+function updatePinDots() {
+  document.querySelectorAll('.pin-dot').forEach(function (d, i) {
+    if (i < enteredPin.length) d.classList.add('filled');
+    else d.classList.remove('filled');
+  });
+}
 
 function verifyPin() {
   if (stbHashPin(enteredPin) !== userProfile.pinHash) {
@@ -300,18 +537,19 @@ function verifyPin() {
   $('codeInput').value = '';
   $('codeAlert').className = 'form-alert';
   $('codeModal').classList.add('show');
-  setTimeout(() => $('codeInput').focus(), 300);
+  setTimeout(function () { $('codeInput').focus(); }, 300);
 }
 
-$('codeClose').addEventListener('click', () => { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; });
-$('codeModal').addEventListener('click', e => { if (e.target.id === 'codeModal') { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; } });
+// ================ STEP 4: CODE → SUBMIT ================
+$('codeClose').addEventListener('click', function () { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; });
+$('codeModal').addEventListener('click', function (e) { if (e.target.id === 'codeModal') { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; } });
 
 $('codeSubmit').addEventListener('click', doTransfer);
-$('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') doTransfer(); });
+$('codeInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') doTransfer(); });
 
 async function doTransfer() {
-  const code = $('codeInput').value.trim().toUpperCase();
-  const a = $('codeAlert');
+  var code = $('codeInput').value.trim().toUpperCase();
+  var a = $('codeAlert');
   a.className = 'form-alert';
   if (!code) { a.textContent = 'Enter your transfer code.'; a.className = 'form-alert show error'; return; }
 
@@ -319,32 +557,32 @@ async function doTransfer() {
   $('codeSubmit').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing…';
 
   try {
-    const reference = stbGenReference();
+    var reference = stbGenReference();
 
-    await db.runTransaction(async (tx) => {
-      const fromRef = db.collection('swifttrust_accounts').doc(pending.fromAccountId);
-      const codeRef = db.collection('swifttrust_codes').doc(code);
-      const fromSnap = await tx.get(fromRef);
-      const cSnap = await tx.get(codeRef);
+    await db.runTransaction(async function (tx) {
+      var fromRef = db.collection('swifttrust_accounts').doc(pending.fromAccountId);
+      var codeRef = db.collection('swifttrust_codes').doc(code);
+      var fromSnap = await tx.get(fromRef);
+      var cSnap = await tx.get(codeRef);
 
       if (!fromSnap.exists) throw new Error('Source account not found.');
       if (!cSnap.exists) throw new Error('Invalid transfer code.');
 
-      const fromData = fromSnap.data();
-      const cData = cSnap.data();
+      var fromData = fromSnap.data();
+      var cData = cSnap.data();
 
       if (fromData.status === 'frozen') throw new Error('Source account is frozen.');
       if (Number(fromData.balance) < pending.total) throw new Error('Insufficient funds.');
       if (cData.used) throw new Error('This code has already been used.');
       if (cData.customerUid && cData.customerUid !== currentUid) throw new Error('This code was not issued to you.');
       if (cData.expiresAt && cData.expiresAt.toDate && cData.expiresAt.toDate() < new Date()) throw new Error('This code has expired.');
-      if (cData.amountLimit && pending.amount > Number(cData.amountLimit)) throw new Error(`This code is limited to ${stbMoney(cData.amountLimit)}.`);
+      if (cData.amountLimit && pending.amount > Number(cData.amountLimit)) throw new Error('This code is limited to ' + stbMoney(cData.amountLimit) + '.');
 
       tx.update(fromRef, { balance: Number(fromData.balance) - pending.total });
       tx.update(codeRef, { used: true, usedAt: firebase.firestore.FieldValue.serverTimestamp(), usedBy: currentUid });
 
       tx.set(db.collection('swifttrust_transactions').doc(), {
-        reference, type: 'external',
+        reference: reference, type: 'external',
         fromUid: currentUid,
         fromAccountId: pending.fromAccountId,
         fromAccountNumber: fromData.accountNumber,
@@ -354,9 +592,14 @@ async function doTransfer() {
         toAccountNumber: pending.toAccountNumber,
         toAccountName: pending.toAccountName,
         toBank: pending.toBank,
-        amount: pending.amount, fee: pending.fee, total: pending.total,
+        amount: pending.amount,
+        fee: pending.fee,
+        total: pending.total,
+        originalCurrency: pending.originalCurrency,
+        originalAmount: pending.originalAmount,
         description: pending.description || null,
-        codeUsed: code, status: 'completed',
+        codeUsed: code,
+        status: 'completed',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
@@ -368,14 +611,22 @@ async function doTransfer() {
         fromAccountName: fromData.ownerName,
         toAccountNumber: 'STB_REVENUE', toAccountName: 'SwiftTrust Bank',
         amount: pending.fee, fee: 0, total: pending.fee,
-        description: 'Transfer fee (3%)', status: 'completed',
+        description: 'Transfer fee (3%)',
+        status: 'completed',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     });
 
     $('codeModal').classList.remove('show');
-    $('successSub').textContent = `To ${pending.toAccountName} · ${pending.toBank}`;
-    $('successAmount').textContent = stbMoney(pending.amount);
+    $('successSub').textContent = 'To ' + pending.toAccountName + ' · ' + pending.toBank;
+
+    var label;
+    if (pending.originalCurrency === 'PHP') {
+      label = function (n) { return phpFmt(n * FX_RATE_PHP); };
+    } else {
+      label = function (n) { return usdFmt(n); };
+    }
+    $('successAmount').textContent = label(pending.amount);
     $('successRef').textContent = reference;
     $('successOverlay').classList.add('show');
     fireConfetti();
@@ -389,16 +640,16 @@ async function doTransfer() {
 }
 
 function fireConfetti() {
-  const colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
-  for (let i = 0; i < 40; i++) {
-    const p = document.createElement('div');
+  var colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  for (var i = 0; i < 40; i++) {
+    var p = document.createElement('div');
     p.className = 'confetti-piece';
     p.style.left = Math.random() * 100 + 'vw';
     p.style.background = colors[Math.floor(Math.random() * colors.length)];
     p.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
     p.style.animationDelay = (Math.random() * 0.4) + 's';
     document.body.appendChild(p);
-    setTimeout(() => p.remove(), 3500);
+    (function (piece) { setTimeout(function () { piece.remove(); }, 3500); })(p);
   }
 }
 </script>
