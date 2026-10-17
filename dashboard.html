@@ -3,50 +3,118 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Dashboard — SwiftTrust Bank</title>
+<title>Dashboard — PNB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="style.css">
 <style>
-  /* Currency toggle pill inside the balance card */
-  .cur-toggle {
-    display: inline-flex;
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 999px;
-    padding: 2px;
-    gap: 2px;
-    position: relative;
-    z-index: 1;
+  /* ============================================================
+     PREMIUM DASHBOARD STYLES
+     ============================================================ */
+  * { box-sizing: border-box; }
+  body { background: #f4f7f9; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+  
+  .mob-shell { max-width: 600px; margin: 0 auto; background: #f4f7f9; min-height: 100vh; position: relative; padding-bottom: 100px; }
+  
+  /* Header */
+  .mob-header { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 40; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .mob-header-actions .btn-logout { background: #f4f7f9; color: var(--pnb-blue); padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.8rem; border: 1px solid var(--line); transition: 0.2s; }
+  .mob-header-actions .btn-logout:hover { background: #e2e8f0; }
+  
+  /* Greeting */
+  .dash-greeting { padding: 28px 20px 20px; }
+  .dash-greeting h1 { font-size: 1.7rem; color: var(--pnb-blue); font-weight: 900; letter-spacing: -0.03em; margin: 0 0 4px; }
+  .dash-greeting p { color: var(--text-dim); font-size: 0.95rem; margin: 0; }
+
+  /* Hero Balance Card */
+  .hero-card {
+    margin: 0 20px 24px; background: linear-gradient(135deg, #002e7a 0%, #001a4d 100%);
+    border-radius: 24px; padding: 32px 28px; position: relative; overflow: hidden; color: #fff;
+    box-shadow: 0 20px 40px rgba(0, 46, 122, 0.2);
   }
-  .cur-btn {
-    background: transparent;
-    border: none;
-    color: #a8c1e6;
-    font-family: inherit;
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: .06em;
-    padding: 5px 11px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: all .15s;
+  .hero-card::after { content: ''; position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); top: -100px; right: -100px; pointer-events: none; }
+  .hero-card::before { content: ''; position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(252,209,22,0.1) 0%, transparent 70%); bottom: -80px; left: -50px; pointer-events: none; }
+  
+  .hero-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; color: #a8bce6; text-transform: uppercase; margin-bottom: 8px; position: relative; z-index: 1; }
+  .hero-balance { font-size: 2.8rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; position: relative; z-index: 1; }
+  .hero-account { font-size: 0.85rem; color: #b8c9e6; font-family: ui-monospace, monospace; margin-bottom: 28px; position: relative; z-index: 1; letter-spacing: 0.05em; }
+  
+  .hero-actions { display: flex; gap: 12px; position: relative; z-index: 1; }
+  .hero-btn { padding: 14px 20px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; text-align: center; text-decoration: none; flex: 1; transition: transform 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .hero-btn:active { transform: scale(0.97); }
+  .hero-btn-primary { background: var(--pnb-gold); color: var(--pnb-blue); }
+  .hero-btn-primary:hover { background: #e5be12; text-decoration: none; color: var(--pnb-blue); }
+  .hero-btn-outline { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+  .hero-btn-outline:hover { background: rgba(255,255,255,0.2); text-decoration: none; color: #fff; }
+
+  /* Stat Cards */
+  .dash-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 0 20px 24px; }
+  .dash-stat-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 20px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+  .dash-stat-icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 1rem; margin-bottom: 12px; }
+  .dash-stat-icon.checking { background: #e0e7ff; color: #4338ca; }
+  .dash-stat-icon.saving { background: #fff9e6; color: var(--pnb-gold-hover); }
+  .dash-stat-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; color: var(--text-faint); text-transform: uppercase; margin-bottom: 6px; }
+  .dash-stat-val { font-size: 1.4rem; font-weight: 800; color: var(--pnb-blue); letter-spacing: -0.02em; }
+
+  /* Quick Actions */
+  .quick-actions-card { margin: 0 20px 32px; background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+  .quick-actions-head { font-size: 1.1rem; font-weight: 800; color: var(--pnb-blue); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .quick-actions-icon { width: 32px; height: 32px; border-radius: 8px; background: #fff9e6; color: var(--pnb-gold-hover); display: grid; place-items: center; font-size: 1rem; }
+  .action-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .action-tile { background: #f8fafc; border: 1px solid var(--line); border-radius: 16px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-decoration: none; color: var(--pnb-blue); font-weight: 700; font-size: 0.85rem; transition: 0.2s; }
+  .action-tile:hover { background: #fff; border-color: var(--pnb-blue); box-shadow: 0 8px 16px rgba(0,46,122,0.05); transform: translateY(-2px); text-decoration: none; }
+  .action-tile i { font-size: 1.4rem; color: var(--pnb-blue); }
+
+  /* Section Headers */
+  .section-title { display: flex; justify-content: space-between; align-items: center; margin: 0 20px 16px; }
+  .section-title h3 { font-size: 1.2rem; color: var(--pnb-blue); font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+  .section-title a { font-size: 0.85rem; color: var(--pnb-gold-hover); font-weight: 700; text-decoration: none; }
+  .section-title a:hover { color: var(--pnb-blue); }
+
+  /* Savings Goal */
+  .goal-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 24px; margin: 0 20px 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+  .goal-header { display: flex; justify-content: space-between; margin-bottom: 16px; align-items: flex-end; }
+  .goal-title { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+  .goal-amounts { font-size: 0.85rem; color: var(--text-faint); }
+  .goal-amounts strong { color: var(--pnb-blue); font-size: 1rem; font-weight: 800; }
+  .goal-bar { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+  .goal-fill { height: 100%; background: linear-gradient(90deg, var(--pnb-gold), #e5be12); border-radius: 99px; width: 0%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+  .goal-sub { font-size: 0.75rem; color: var(--text-faint); font-weight: 600; text-align: right; }
+
+  /* Recent Transactions */
+  .tx-mini-list { background: #fff; border: 1px solid var(--line); border-radius: 20px; margin: 0 20px 32px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+  .tx-mini-row { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--line); transition: 0.15s; }
+  .tx-mini-row:hover { background: #f8fafc; }
+  .tx-mini-row:last-child { border-bottom: none; }
+  .tx-mini-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 1rem; flex-shrink: 0; }
+  .tx-mini-icon.in { background: #dcfce7; color: #15803d; }
+  .tx-mini-icon.out { background: #fee2e2; color: #b91c1c; }
+  .tx-mini-main { flex: 1; min-width: 0; }
+  .tx-mini-desc { font-size: 0.9rem; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tx-mini-date { font-size: 0.75rem; color: var(--text-faint); margin-top: 4px; font-weight: 500; }
+  .tx-mini-amt { font-size: 1rem; font-weight: 800; white-space: nowrap; }
+  .tx-mini-amt.pos { color: #15803d; }
+  .tx-mini-amt.neg { color: var(--ink); }
+
+  /* Promo Banner */
+  .promo-banner {
+    margin: 0 20px 24px; border-radius: 20px; padding: 28px;
+    background: linear-gradient(135deg, #002e7a, #001a4d); color: #fff;
+    position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 12px 24px rgba(0,46,122,0.15);
   }
-  .cur-btn:hover { color: #fff; }
-  .cur-btn.active {
-    background: #fff;
-    color: var(--navy);
-    box-shadow: 0 2px 6px rgba(0,0,0,.12);
-  }
-  .bh-label-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-    position: relative;
-    z-index: 1;
+  .promo-banner::after { content: ''; position: absolute; width: 150px; height: 150px; background: rgba(252,209,22,0.1); border-radius: 50%; top: -50px; right: -30px; }
+  .promo-text { position: relative; z-index: 1; }
+  .promo-text h4 { font-size: 1.15rem; font-weight: 800; margin: 0 0 8px; }
+  .promo-text p { font-size: 0.85rem; color: #b8c9e6; max-width: 200px; line-height: 1.5; margin: 0; }
+  .promo-btn { position: relative; z-index: 1; background: var(--pnb-gold); color: var(--pnb-blue); padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 800; text-decoration: none; white-space: nowrap; transition: 0.15s; }
+  .promo-btn:hover { background: #e5be12; transform: translateY(-2px); }
+
+  @media (max-width: 400px) {
+    .dash-cards { grid-template-columns: 1fr; }
+    .action-row { gap: 8px; }
+    .action-tile { padding: 16px 8px; font-size: 0.75rem; }
   }
 </style>
 </head>
@@ -54,133 +122,123 @@
 
 <div class="mob-shell">
 
+  <!-- Top Header -->
   <header class="mob-header">
-    <div class="mob-header-inner">
-      <div class="mob-header-left">
-        <button class="mob-menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-        <a href="dashboard.html" class="mob-brand">
-          <div class="mob-brand-mark"><i class="fas fa-shield-halved"></i></div>
-          <div>
-            <div>SwiftTrust</div>
-            <div class="mob-brand-sub">Bank</div>
-          </div>
-        </a>
-      </div>
-      <div class="mob-header-right">
-        <button class="mob-icon-btn" title="Security"><i class="fas fa-shield-halved"></i></button>
-        <a href="notifications.html" class="mob-icon-btn" title="Notifications" style="color:var(--ink);">
-          <i class="fas fa-bell"></i>
-          <span class="badge-dot" id="notifDot" style="display:none;">•</span>
-        </a>
-        <a href="profile.html" class="mob-avatar" id="headerAvatar" style="text-decoration:none;">—</a>
-      </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button id="menuBtn" style="background:none;border:none;font-size:1.3rem;color:var(--pnb-blue);cursor:pointer;"><i class="fas fa-bars"></i></button>
+      <a href="dashboard.html" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+        <svg viewBox="0 0 100 100" width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 20 Q10 10 20 10 L80 10 Q90 10 90 20 L90 70 Q90 90 50 95 Q10 90 10 70 Z" fill="#002e7a"/>
+          <path d="M15 23 Q15 15 23 15 L77 15 Q85 15 85 23 L85 68 Q85 84 50 88 Q15 84 15 68 Z" fill="#ffffff"/>
+          <path d="M19 27 Q19 19 27 19 L50 19 L50 84.5 Q30 82 19 68 Z" fill="#2563eb"/>
+          <path d="M50 19 L73 19 Q81 19 81 27 L81 68 Q70 82 50 84.5 Z" fill="#dc2626"/>
+          <circle cx="50" cy="30" r="7" fill="#fcd116"/>
+          <path d="M40 23 l1.5 3 3.5 .5 -2.5 2.5 .5 3.5 -3 -1.5 -3 1.5 .5 -3.5 -2.5 -2.5 3.5 -.5 Z" fill="#fcd116"/>
+          <path d="M60 23 l1.5 3 3.5 .5 -2.5 2.5 .5 3.5 -3 -1.5 -3 1.5 .5 -3.5 -2.5 -2.5 3.5 -.5 Z" fill="#fcd116"/>
+          <path d="M30 45 Q35 40 40 45 Q45 50 40 60 Q35 65 30 60 Z" fill="#ffffff" opacity="0.9"/>
+          <path d="M70 45 Q65 40 60 45 Q55 50 60 60 Q65 65 70 60 Z" fill="#fcd116" opacity="0.9"/>
+        </svg>
+        <span style="font-size:1.4rem; font-weight:900; color:var(--pnb-blue); letter-spacing:-0.04em; line-height:1;">PNB</span>
+      </a>
+    </div>
+    <div class="mob-header-actions">
+      <button class="btn-logout" id="headerLogout">Log Out</button>
     </div>
   </header>
 
-  <section class="balance-hero">
-    <div class="bh-greet-row">
-      <div class="bh-greet-left">
-        <div class="bh-avatar" id="heroInitials">—</div>
-        <div>
-          <div class="bh-greet-label" id="greetLabel">Good Morning</div>
-          <div class="bh-greet-name" id="greetName">—</div>
-        </div>
-      </div>
-      <div class="bh-time">
-        <div class="bh-clock" id="liveClock">--:--:--</div>
-        <div class="bh-date" id="liveDate">—</div>
-      </div>
-    </div>
+  <!-- Greeting -->
+  <div class="dash-greeting">
+    <h1>Hello, <span id="firstName">—</span></h1>
+    <p>Here's an overview of your PNB accounts.</p>
+  </div>
 
-    <div class="bh-label-row">
-      <div class="bh-label">Available Balance</div>
-      <div class="cur-toggle" id="curToggle">
-        <button class="cur-btn active" data-cur="USD">USD</button>
-        <button class="cur-btn" data-cur="PHP">PHP</button>
-      </div>
+  <!-- Hero Card -->
+  <div class="hero-card">
+    <div class="hero-label">Available Balance</div>
+    <div class="hero-balance" id="totalBalance">₱0.00</div>
+    <div class="hero-account" id="accountNum">Account PNB0000000000</div>
+    
+    <div class="hero-actions">
+      <a href="transfer-internal.html" class="hero-btn hero-btn-primary"><i class="fas fa-paper-plane"></i> Send Money</a>
+      <a href="history.html" class="hero-btn hero-btn-outline"><i class="fas fa-clock-rotate-left"></i> History</a>
     </div>
-    <div class="bh-amount-row">
-      <div class="bh-amount" id="totalBalance">$0.00</div>
-      <button class="bh-eye" id="eyeToggle" title="Hide / show">
-        <i class="fas fa-eye" id="eyeIcon"></i>
-      </button>
-    </div>
+  </div>
 
-    <div class="bh-account-row">
-      <div class="bh-account-left">
-        <div class="bh-account-icon"><i class="fas fa-building-columns"></i></div>
-        <div>
-          <div class="bh-account-label">Your Account Number</div>
-          <div class="bh-account-num" id="primaryAccNum">— — — — —</div>
-          <div class="bh-active-badge"><i class="fas fa-circle"></i> Active</div>
-        </div>
-      </div>
-      <div class="bh-account-actions">
-        <a href="history.html" class="bh-chip"><i class="fas fa-chart-line"></i> Transactions</a>
-        <a href="history.html" class="bh-chip"><i class="fas fa-file-lines"></i> Statement</a>
-      </div>
+  <!-- Stat Cards -->
+  <div class="dash-cards">
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon checking"><i class="fas fa-wallet"></i></div>
+      <div class="dash-stat-label">Checking</div>
+      <div class="dash-stat-val" id="checkingBal">₱0.00</div>
     </div>
-  </section>
+    <div class="dash-stat-card">
+      <div class="dash-stat-icon saving"><i class="fas fa-lock"></i></div>
+      <div class="dash-stat-label">Save</div>
+      <div class="dash-stat-val" id="saveBal">₱0.00</div>
+    </div>
+  </div>
 
-  <section class="action-section">
-    <div class="action-title">What would you like to do today?</div>
-    <div class="action-sub">Choose from our popular actions below</div>
+  <!-- Quick Actions -->
+  <div class="quick-actions-card">
+    <div class="quick-actions-head">
+      <div class="quick-actions-icon"><i class="fas fa-bolt"></i></div>
+      Quick Actions
+    </div>
     <div class="action-row">
       <a href="transfer-internal.html" class="action-tile">
-        <i class="fas fa-building-columns"></i><span>To SwiftTrust</span>
+        <i class="fas fa-building-columns"></i><span>To PNB</span>
       </a>
       <a href="transfer-external.html" class="action-tile">
-        <i class="fas fa-paper-plane"></i><span>To Bank</span>
+        <i class="fas fa-exchange-alt"></i><span>To Bank</span>
       </a>
       <a href="save.html" class="action-tile">
-        <i class="fas fa-lock"></i><span>Save</span>
+        <i class="fas fa-piggy-bank"></i><span>Save</span>
       </a>
     </div>
-  </section>
-
-  <div class="section-head-row">
-    <h3>My Balances</h3>
-    <a href="move-money.html">Move money</a>
   </div>
-  <div class="balances-scroll" id="balancesScroll">
-    <div class="balance-tile" style="opacity:.5;">
-      <div class="balance-tile-icon usd"><i class="fas fa-circle-notch fa-spin"></i></div>
-      <div class="balance-tile-label">Loading…</div>
-      <div class="balance-tile-amount">$0.00</div>
-      <div class="balance-tile-sub">Please wait</div>
+
+  <!-- Savings Goal -->
+  <div class="section-title">
+    <h3>Savings Goal</h3>
+    <a href="save.html">Manage</a>
+  </div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">Emergency Fund</div>
+      <div class="goal-amounts"><strong id="goalCurrent">₱0</strong> / ₱50,000</div>
     </div>
+    <div class="goal-bar">
+      <div class="goal-fill" id="goalFill"></div>
+    </div>
+    <div class="goal-sub" id="goalPct">0% achieved</div>
   </div>
 
-  <div class="section-head-row" style="margin-top:22px;">
+  <!-- Recent Transactions -->
+  <div class="section-title">
     <h3>Recent Activity</h3>
-    <a href="history.html">View all</a>
+    <a href="history.html">See All</a>
   </div>
-  <div class="mob-pad" style="margin-bottom:24px;">
-    <div class="card" style="padding:0;overflow:hidden;">
-      <div id="recentList">
-        <div class="empty-state"><i class="fas fa-circle-notch fa-spin"></i><p>Loading activity…</p></div>
-      </div>
+  <div class="tx-mini-list" id="recentTxList">
+    <div class="empty-state"><i class="fas fa-circle-notch fa-spin"></i><p>Loading...</p></div>
+  </div>
+
+  <!-- Promo Banner -->
+  <div class="promo-banner">
+    <div class="promo-text">
+      <h4>Get your PNB Credit Card</h4>
+      <p>Apply now and get 0% interest for 3 months on all purchases.</p>
     </div>
+    <a href="#" class="promo-btn" onclick="event.preventDefault(); stbToast('Coming soon!');">Apply Now</a>
   </div>
 
 </div>
 
+<!-- Bottom Nav -->
 <nav class="bottom-nav">
-  <a href="dashboard.html" class="bottom-nav-item active">
-    <i class="fas fa-house"></i><span>Home</span>
-  </a>
-  <a href="history.html" class="bottom-nav-item">
-    <i class="fas fa-clock-rotate-left"></i><span>History</span>
-  </a>
-  <a href="#" id="bottomNavMenu" class="bottom-nav-item">
-    <i class="fas fa-bars"></i><span>Menu</span>
-  </a>
-  <a href="stocks.html" class="bottom-nav-item">
-    <i class="fas fa-chart-line"></i><span>Stocks</span>
-  </a>
-  <a href="profile.html" class="bottom-nav-item">
-    <i class="fas fa-user"></i><span>Profile</span>
-  </a>
+  <a href="dashboard.html" class="bottom-nav-item active"><i class="fas fa-house"></i><span>Home</span></a>
+  <a href="history.html" class="bottom-nav-item"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
+  <a href="#" id="bottomNavMenu" class="bottom-nav-item"><i class="fas fa-bars"></i><span>Menu</span></a>
+  <a href="profile.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -190,95 +248,10 @@
 <script src="drawer.js"></script>
 
 <script>
-// ============================================================
-// Fixed exchange rate — change here if you want a new rate
-// ============================================================
-const FX_RATE_PHP = 57.00;   // 1 USD = 57.00 PHP
-
 let currentUid = null, userProfile = null;
-let accountsCache = [], savesCache = [], txOut = [], txIn = [];
+let accountsCache = [], savesCache = [];
 let unsubAccounts, unsubSaves, unsubTxOut, unsubTxIn;
-let balanceHidden = false;
-let currentCurrency = 'USD';   // 'USD' or 'PHP'
 
-const NY_TZ = 'America/New_York';
-
-// ============================================================
-// Currency formatter — reads currentCurrency
-// ============================================================
-function fmt(usdAmount) {
-  const n = Number(usdAmount || 0);
-  if (currentCurrency === 'PHP') {
-    const php = n * FX_RATE_PHP;
-    return '₱' + php.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-  return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-// ============================================================
-// Live clock — New York time
-// ============================================================
-function updateClock() {
-  const now = new Date();
-  document.getElementById('liveClock').textContent = new Intl.DateTimeFormat('en-US', {
-    timeZone: NY_TZ, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-  }).format(now);
-
-  document.getElementById('liveDate').textContent = new Intl.DateTimeFormat('en-US', {
-    timeZone: NY_TZ, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
-  }).format(now);
-
-  const hourNY = Number(new Intl.DateTimeFormat('en-US', {
-    timeZone: NY_TZ, hour: 'numeric', hour12: false
-  }).format(now));
-
-  document.getElementById('greetLabel').textContent =
-    hourNY < 12 ? 'Good Morning' : hourNY < 17 ? 'Good Afternoon' : 'Good Evening';
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// ============================================================
-// Eye toggle
-// ============================================================
-document.getElementById('eyeToggle').addEventListener('click', () => {
-  balanceHidden = !balanceHidden;
-  document.getElementById('eyeIcon').className = balanceHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
-  updateTotalBalance();
-  renderBalances();
-});
-
-// ============================================================
-// Currency toggle
-// ============================================================
-document.querySelectorAll('.cur-btn').forEach(b => {
-  b.addEventListener('click', async () => {
-    const cur = b.dataset.cur;
-    if (cur === currentCurrency) return;
-    currentCurrency = cur;
-
-    // Update active pill
-    document.querySelectorAll('.cur-btn').forEach(x => {
-      x.classList.toggle('active', x.dataset.cur === cur);
-    });
-
-    // Re-render
-    updateTotalBalance();
-    renderBalances();
-    renderRecent();
-
-    // Persist preference
-    if (currentUid) {
-      try {
-        await db.collection('swifttrust_users').doc(currentUid).update({ currency: cur });
-      } catch (e) { console.error('save currency pref', e); }
-    }
-  });
-});
-
-// ============================================================
-// Auth
-// ============================================================
 auth.onAuthStateChanged(async (user) => {
   if (!user) { window.location.href = 'login.html'; return; }
   const snap = await db.collection('swifttrust_users').doc(user.uid).get();
@@ -289,206 +262,95 @@ auth.onAuthStateChanged(async (user) => {
   currentUid = user.uid;
   userProfile = data;
 
-  // Apply saved currency preference
-  currentCurrency = (data.currency === 'PHP') ? 'PHP' : 'USD';
-  document.querySelectorAll('.cur-btn').forEach(x => {
-    x.classList.toggle('active', x.dataset.cur === currentCurrency);
-  });
-
   const firstName = (data.fullName || '').split(' ')[0] || 'there';
-  document.getElementById('greetName').textContent = firstName;
-  const initials = (data.fullName || '?').split(' ').map(s => s[0]).slice(0, 2).join('').toUpperCase();
-  document.getElementById('heroInitials').textContent = initials;
-  document.getElementById('headerAvatar').textContent = initials;
+  document.getElementById('firstName').textContent = firstName;
 
   startListeners();
+});
+
+document.getElementById('headerLogout').addEventListener('click', async () => {
+  await auth.signOut();
+  window.location.href = 'login.html';
 });
 
 function startListeners() {
   if (unsubAccounts) return;
 
-  unsubAccounts = db.collection('swifttrust_accounts')
-    .where('ownerId', '==', currentUid)
-    .onSnapshot(snap => {
-      accountsCache = [];
-      snap.forEach(d => accountsCache.push({ id: d.id, ...d.data() }));
-      accountsCache.sort((a, b) => {
-        const order = { checking: 0, savings: 1 };
-        return (order[a.type] ?? 99) - (order[b.type] ?? 99);
-      });
-      updateTotalBalance();
-      renderBalances();
-      renderPrimaryAccount();
-    }, err => console.error('accounts', err));
+  unsubAccounts = db.collection('swifttrust_accounts').where('ownerId', '==', currentUid).onSnapshot(snap => {
+    accountsCache = []; snap.forEach(d => accountsCache.push({ id: d.id, ...d.data() })); updateUI();
+  });
 
-  unsubSaves = db.collection('swifttrust_saves')
-    .where('ownerId', '==', currentUid)
-    .onSnapshot(snap => {
-      savesCache = [];
-      snap.forEach(d => savesCache.push({ id: d.id, ...d.data() }));
-      renderBalances();
-    }, err => console.error('saves', err));
+  unsubSaves = db.collection('swifttrust_saves').where('ownerId', '==', currentUid).onSnapshot(snap => {
+    savesCache = []; snap.forEach(d => savesCache.push({ id: d.id, ...d.data() })); updateUI();
+  });
 
-  unsubTxOut = db.collection('swifttrust_transactions')
-    .where('fromUid', '==', currentUid)
-    .onSnapshot(snap => {
-      txOut = [];
-      snap.forEach(d => txOut.push({ id: d.id, ...d.data() }));
-      renderRecent();
-      updateNotifDot();
-    }, err => console.error('txOut', err));
-
-  unsubTxIn = db.collection('swifttrust_transactions')
-    .where('toUid', '==', currentUid)
-    .onSnapshot(snap => {
-      txIn = [];
-      snap.forEach(d => txIn.push({ id: d.id, ...d.data() }));
-      renderRecent();
-      updateNotifDot();
-    }, err => console.error('txIn', err));
+  let txOut = [], txIn = [];
+  unsubTxOut = db.collection('swifttrust_transactions').where('fromUid', '==', currentUid).limit(5).onSnapshot(snap => {
+    txOut = []; snap.forEach(d => txOut.push({ id: d.id, ...d.data() })); renderRecentTx(txOut, txIn);
+  });
+  unsubTxIn = db.collection('swifttrust_transactions').where('toUid', '==', currentUid).limit(5).onSnapshot(snap => {
+    txIn = []; snap.forEach(d => txIn.push({ id: d.id, ...d.data() })); renderRecentTx(txOut, txIn);
+  });
 }
 
-function updateNotifDot() {
-  const all = [...txOut, ...txIn];
-  const lastRead = userProfile && userProfile.lastReadNotifAt && userProfile.lastReadNotifAt.toDate
-    ? userProfile.lastReadNotifAt.toDate().getTime() : 0;
-  const hasNew = all.some(t => t.createdAt && t.createdAt.toDate && t.createdAt.toDate().getTime() > lastRead);
-  document.getElementById('notifDot').style.display = hasNew ? 'grid' : 'none';
-}
-
-function updateTotalBalance() {
-  const total = accountsCache.reduce((s, a) => s + Number(a.balance || 0), 0);
-  document.getElementById('totalBalance').textContent = balanceHidden ? '••••••' : fmt(total);
-}
-
-function renderPrimaryAccount() {
-  const primary = accountsCache.find(a => a.type === 'checking') || accountsCache[0];
-  if (!primary) return;
-  const num = String(primary.accountNumber || '');
-  const formatted = num.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3') || num;
-  document.getElementById('primaryAccNum').textContent = formatted || '— — — — —';
-}
-
-function renderBalances() {
-  const el = document.getElementById('balancesScroll');
-  let html = '';
-
-  if (accountsCache.length > 0) {
-    html += accountsCache.map(a => {
-      const isChecking = a.type === 'checking';
-      const iconCls = isChecking ? 'usd' : a.type === 'savings' ? 'savings' : 'locked';
-      const icon = isChecking ? 'fa-wallet' : a.type === 'savings' ? 'fa-piggy-bank' : 'fa-lock';
-      const label = a.nickname || (isChecking ? 'Checking' : a.type === 'savings' ? 'Savings' : a.type);
-      const sub = isChecking ? 'Everyday spending' : a.type === 'savings' ? 'High-yield savings' : 'Account';
-      return `
-        <div class="balance-tile" style="cursor:pointer;" onclick="location.href='move-money.html?from=${a.type}'">
-          <div class="balance-tile-icon ${iconCls}"><i class="fas ${icon}"></i></div>
-          <div class="balance-tile-label">${label}</div>
-          <div class="balance-tile-amount">${balanceHidden ? '••••••' : fmt(a.balance)}</div>
-          <div class="balance-tile-sub">•••• ${String(a.accountNumber || '').slice(-4)} · ${sub}</div>
-        </div>
-      `;
-    }).join('');
+function updateUI() {
+  const checking = accountsCache.find(a => a.type === 'checking') || accountsCache[0];
+  
+  if (checking) {
+    document.getElementById('totalBalance').textContent = stbMoney(checking.balance);
+    document.getElementById('checkingBal').textContent = stbMoney(checking.balance);
+    document.getElementById('accountNum').textContent = 'Account PNB' + String(checking.accountNumber || '0000000000');
   }
 
   const lockedSaves = savesCache.filter(s => s.status === 'locked');
   const totalLocked = lockedSaves.reduce((sum, s) => sum + Number(s.amount || 0), 0);
+  document.getElementById('saveBal').textContent = stbMoney(totalLocked);
 
-  if (lockedSaves.length > 0) {
-    const nearest = lockedSaves
-      .map(s => s.maturesAt?.toDate ? s.maturesAt.toDate() : new Date(s.maturesAt))
-      .sort((a, b) => a - b)[0];
-    const days = Math.max(0, Math.ceil((nearest - Date.now()) / 86400000));
-    html += `
-      <div class="balance-tile" style="cursor:pointer;" onclick="location.href='save.html'">
-        <div class="balance-tile-icon locked"><i class="fas fa-lock"></i></div>
-        <div class="balance-tile-label">Locked Save</div>
-        <div class="balance-tile-amount">${balanceHidden ? '••••••' : fmt(totalLocked)}</div>
-        <div class="balance-tile-sub">${lockedSaves.length} lock${lockedSaves.length === 1 ? '' : 's'} · next matures in ${days}d</div>
-      </div>
-    `;
-  }
-
-  if (!html) {
-    el.innerHTML = '<div class="empty-state"><i class="fas fa-wallet"></i><p>No accounts yet.</p></div>';
-    return;
-  }
-
-  el.innerHTML = html;
+  // Update Savings Goal
+  const goalTarget = 50000;
+  const progress = Math.min(100, (totalLocked / goalTarget) * 100);
+  document.getElementById('goalCurrent').textContent = stbMoney(totalLocked);
+  document.getElementById('goalFill').style.width = progress + '%';
+  document.getElementById('goalPct').textContent = Math.round(progress) + '% achieved';
 }
 
-function renderRecent() {
-  const all = [...txOut, ...txIn].sort((a, b) => {
-    const ta = a.createdAt && a.createdAt.toDate ? a.createdAt.toDate().getTime() : 0;
-    const tb = b.createdAt && b.createdAt.toDate ? b.createdAt.toDate().getTime() : 0;
-    return tb - ta;
-  }).slice(0, 4);
+function renderRecentTx(txOut, txIn) {
+  const all = [...txOut, ...txIn];
+  const map = new Map();
+  all.forEach(t => map.set(t.id, t));
+  const unique = Array.from(map.values());
+  
+  unique.sort((a, b) => (b.createdAt?.toDate?.()?.getTime?.() || 0) - (a.createdAt?.toDate?.()?.getTime?.() || 0));
+  const latest = unique.slice(0, 3);
 
-  const el = document.getElementById('recentList');
-  if (all.length === 0) {
-    el.innerHTML = `<div class="empty-state"><i class="fas fa-receipt"></i><p>No transactions yet.</p></div>`;
+  const el = document.getElementById('recentTxList');
+  if (latest.length === 0) {
+    el.innerHTML = `<div style="padding:30px; text-align:center; color:var(--text-faint); font-size:0.9rem;"><i class="fas fa-receipt" style="font-size:1.5rem; margin-bottom:8px; display:block; opacity:0.5;"></i>No recent transactions</div>`;
     return;
   }
 
-  el.innerHTML = all.map(t => {
+  el.innerHTML = latest.map(t => {
     const isOut = t.fromUid === currentUid;
-    const isFee = t.type === 'fee';
-    const isStock = t.type === 'stock_buy' || t.type === 'stock_sell';
-    const isSaveLock = t.type === 'save_lock';
-    const isSaveRelease = t.type === 'save_release';
-    const isMove = t.type === 'internal_move';
-
-    let sign = isOut ? '-' : '+';
-    let icon = 'fa-arrow-up';
-    let iconBg = '#fee2e2';
-    let iconColor = '#b91c1c';
-    let desc = t.description || '';
-
-    if (isFee) {
-      sign = '-'; icon = 'fa-percent'; iconBg = '#fef3c7'; iconColor = '#b45309';
-      desc = 'Transfer fee';
-    } else if (isStock) {
-      sign = t.type === 'stock_buy' ? '-' : '+';
-      icon = 'fa-chart-line'; iconBg = '#ede9fe'; iconColor = '#6d28d9';
-      desc = t.description || (t.type === 'stock_buy' ? 'Stock purchase' : 'Stock sale');
-    } else if (isSaveLock) {
-      sign = '-'; icon = 'fa-lock'; iconBg = '#e8f0fb'; iconColor = '#2563eb';
-      desc = 'Funds locked';
-    } else if (isSaveRelease) {
-      sign = '+'; icon = 'fa-unlock'; iconBg = '#dcfce7'; iconColor = '#15803d';
-      desc = 'Save released';
-    } else if (isMove) {
-      sign = '↔'; icon = 'fa-right-left'; iconBg = '#e8f0fb'; iconColor = '#2563eb';
-      desc = t.description || 'Account transfer';
-    } else if (t.type === 'admin_credit') {
-      sign = '+'; icon = 'fa-circle-plus'; iconBg = '#dcfce7'; iconColor = '#15803d';
-      desc = t.description || 'Deposit';
-    } else if (t.type === 'admin_debit') {
-      sign = '-'; icon = 'fa-circle-minus'; iconBg = '#fee2e2'; iconColor = '#b91c1c';
-      desc = t.description || 'Adjustment';
-    } else if (isOut) {
-      desc = t.toBank ? `To ${t.toAccountName} · ${t.toBank}` : `To ${t.toAccountName || t.toAccountNumber}`;
-    } else {
-      sign = '+'; icon = 'fa-arrow-down'; iconBg = '#dcfce7'; iconColor = '#15803d';
-      desc = `From ${t.fromAccountName || t.fromAccountNumber}`;
-    }
-
-    const color = (sign === '+' || sign === '↔') ? 'var(--green)' : 'var(--ink)';
-    const amtDisplay = isMove ? fmt(t.amount) : (sign + fmt(t.amount));
-    const curTag = currentCurrency === 'PHP' ? 'PHP' : 'USD';
+    const sign = isOut ? '-' : '+';
+    const colorClass = isOut ? 'neg' : 'pos';
+    
+    let title = t.description || (isOut ? `To ${t.toAccountName || 'Account'}` : `From ${t.fromAccountName || 'Account'}`);
+    if (t.type === 'internal_move') title = 'Moved to Savings';
+    if (t.type === 'save_lock') title = 'Funds Locked';
 
     return `
-      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);">
-        <div style="width:38px;height:38px;border-radius:12px;background:${iconBg};color:${iconColor};display:grid;place-items:center;flex-shrink:0;">
-          <i class="fas ${icon}"></i>
+      <div class="tx-mini-row">
+        <div class="tx-mini-icon ${isOut ? 'out' : 'in'}">
+          <i class="fas ${isOut ? 'fa-arrow-up' : 'fa-arrow-down'}"></i>
         </div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:.88rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${desc}</div>
-          <div style="font-size:.72rem;color:var(--text-faint);">${stbDate(t.createdAt)} · ${curTag}</div>
+        <div class="tx-mini-main">
+          <div class="tx-mini-desc">${title}</div>
+          <div class="tx-mini-date">${stbDate(t.createdAt)}</div>
         </div>
-        <div style="font-size:.9rem;font-weight:700;color:${color};white-space:nowrap;">${amtDisplay}</div>
-      </div>`;
-  }).join('') + `<a href="history.html" style="display:block;text-align:center;padding:14px;font-size:.82rem;font-weight:600;">View all transactions <i class="fas fa-arrow-right"></i></a>`;
+        <div class="tx-mini-amt ${colorClass}">${sign}${stbMoney(t.amount)}</div>
+      </div>
+    `;
+  }).join('');
 }
 </script>
 </body>
