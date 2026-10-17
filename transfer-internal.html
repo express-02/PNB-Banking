@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Transfer to SwiftTrust — SwiftTrust Bank</title>
+<title>Transfer to PNB — PNB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,27 +12,26 @@
 <body>
 
 <div class="mob-shell">
-
   <header class="mob-header">
     <div class="mob-header-inner">
-      <div class="mob-header-left">
+      <div style="display:flex; align-items:center; gap:12px;">
         <button class="mob-menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-        <h1 style="font-size:1.05rem;">To SwiftTrust</h1>
+        <h1 style="font-size:1.05rem; color:var(--pnb-blue);">To PNB Account</h1>
       </div>
-      <div class="mob-header-right">
-        <a href="transfer-external.html" class="mob-icon-btn" title="Switch to external"><i class="fas fa-right-left"></i></a>
+      <div class="mob-header-actions">
+        <a href="transfer-external.html" class="mob-icon-btn" title="Switch to external" style="color:var(--pnb-blue);"><i class="fas fa-right-left"></i></a>
       </div>
     </div>
   </header>
 
   <div class="mob-pad" style="padding-top:18px;">
 
-    <div class="card" style="background:var(--blue-soft);border-color:var(--blue-line);padding:16px 18px;margin-bottom:16px;">
+    <div class="card" style="background:#fff9e6; border-color:#fce8a6; padding:16px 18px; margin-bottom:16px;">
       <div style="display:flex;gap:12px;align-items:flex-start;">
-        <i class="fas fa-circle-info" style="color:var(--blue);margin-top:3px;"></i>
+        <i class="fas fa-circle-info" style="color:var(--pnb-gold-hover);margin-top:3px;"></i>
         <div>
-          <div style="font-weight:600;color:var(--blue);font-size:.88rem;">Sending to another SwiftTrust customer?</div>
-          <div style="font-size:.8rem;color:var(--text-dim);margin-top:2px;">Instant, fee applies. Enter their 10-digit account number below.</div>
+          <div style="font-weight:600;color:var(--pnb-blue);font-size:.88rem;">Sending to another PNB customer?</div>
+          <div style="font-size:.8rem;color:var(--text-dim);margin-top:2px;">Instant. A 3% fee applies. Enter their 10-digit account number below.</div>
         </div>
       </div>
     </div>
@@ -48,11 +47,11 @@
       <div class="field">
         <label>Recipient account number</label>
         <input type="text" id="toAccount" placeholder="10-digit account number" maxlength="10" inputmode="numeric" required />
-        <div class="field-hint" id="recHint">Enter the recipient's 10-digit SwiftTrust account number.</div>
+        <div class="field-hint" id="recHint">Enter the recipient's 10-digit PNB account number.</div>
       </div>
 
       <div class="field">
-        <label>Amount (USD)</label>
+        <label>Amount (PHP)</label>
         <input type="number" id="amount" placeholder="0.00" min="1" step="0.01" required />
       </div>
 
@@ -61,19 +60,19 @@
         <input type="text" id="description" placeholder="What's this for?" maxlength="80" />
       </div>
 
-      <div style="background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0;">
+      <div style="background:var(--pnb-bg);border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0;">
         <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;">
-          <span style="color:var(--text-dim);">Amount</span><span id="feeAmount">$0.00</span>
+          <span style="color:var(--text-dim);">Amount</span><span id="feeAmount">₱0.00</span>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;">
-          <span style="color:var(--text-dim);">Transfer fee (3%)</span><span id="feeFee">$0.00</span>
+          <span style="color:var(--text-dim);">Transfer fee (3%)</span><span id="feeFee">₱0.00</span>
         </div>
-        <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:6px;">
-          <span>Total debited</span><span id="feeTotal">$0.00</span>
+        <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:6px;color:var(--pnb-blue);">
+          <span>Total debited</span><span id="feeTotal">₱0.00</span>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn" style="background:var(--pnb-blue); color:#fff;">
         Review transfer <i class="fas fa-arrow-right"></i>
       </button>
     </form>
@@ -85,114 +84,68 @@
   <a href="dashboard.html" class="bottom-nav-item"><i class="fas fa-house"></i><span>Home</span></a>
   <a href="history.html" class="bottom-nav-item"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
   <a href="#" id="bottomNavMenu" class="bottom-nav-item"><i class="fas fa-bars"></i><span>Menu</span></a>
-  <a href="stocks.html" class="bottom-nav-item"><i class="fas fa-chart-line"></i><span>Stocks</span></a>
   <a href="profile.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
 </nav>
 
-<!-- REVIEW MODAL -->
+<!-- MODALS (Review, PIN, Code, Success) -->
 <div class="modal-overlay" id="reviewModal">
   <div class="modal-panel" style="position:relative;">
     <button class="modal-close" id="reviewClose"><i class="fas fa-xmark"></i></button>
     <div class="modal-handle"></div>
     <div class="modal-title">Review transfer</div>
     <div class="modal-sub">Confirm the details before you continue.</div>
-
-    <div style="background:var(--bg);border-radius:14px;padding:18px;margin-bottom:18px;">
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);">
-        <span style="color:var(--text-faint);font-size:.82rem;">Recipient</span>
-        <span style="font-weight:600;font-size:.88rem;text-align:right;" id="rvRecipient">—</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);">
-        <span style="color:var(--text-faint);font-size:.82rem;">Account</span>
-        <span style="font-weight:600;font-size:.88rem;font-family:ui-monospace,monospace;" id="rvAccount">—</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);">
-        <span style="color:var(--text-faint);font-size:.82rem;">From</span>
-        <span style="font-weight:600;font-size:.88rem;" id="rvFrom">—</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);">
-        <span style="color:var(--text-faint);font-size:.82rem;">Amount</span>
-        <span style="font-weight:600;font-size:.88rem;" id="rvAmount">$0.00</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);">
-        <span style="color:var(--text-faint);font-size:.82rem;">Fee (3%)</span>
-        <span style="font-weight:600;font-size:.88rem;" id="rvFee">$0.00</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:700;font-size:1rem;">
-        <span>Total</span><span id="rvTotal">$0.00</span>
-      </div>
+    <div style="background:var(--pnb-bg);border-radius:14px;padding:18px;margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Recipient</span><span style="font-weight:600;font-size:.88rem;text-align:right;" id="rvRecipient">—</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Account</span><span style="font-weight:600;font-size:.88rem;font-family:ui-monospace,monospace;" id="rvAccount">—</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">From</span><span style="font-weight:600;font-size:.88rem;" id="rvFrom">—</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Amount</span><span style="font-weight:600;font-size:.88rem;" id="rvAmount">₱0.00</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);"><span style="color:var(--text-faint);font-size:.82rem;">Fee (3%)</span><span style="font-weight:600;font-size:.88rem;" id="rvFee">₱0.00</span></div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-weight:700;font-size:1rem;color:var(--pnb-blue);"><span>Total</span><span id="rvTotal">₱0.00</span></div>
     </div>
-
-    <button class="btn btn-primary btn-block btn-lg" id="reviewContinue">
-      Confirm & continue <i class="fas fa-arrow-right"></i>
-    </button>
+    <button class="btn btn-primary btn-block btn-lg" id="reviewContinue" style="background:var(--pnb-blue); color:#fff;">Confirm & continue <i class="fas fa-arrow-right"></i></button>
   </div>
 </div>
 
-<!-- PIN MODAL -->
 <div class="modal-overlay" id="pinModal">
   <div class="modal-panel" style="position:relative;">
     <button class="modal-close" id="pinClose"><i class="fas fa-xmark"></i></button>
     <div class="modal-handle"></div>
     <div class="modal-title">Enter your PIN</div>
     <div class="modal-sub">Confirm this transfer with your 4-digit PIN.</div>
-
-    <div class="pin-dots">
-      <div class="pin-dot"></div><div class="pin-dot"></div>
-      <div class="pin-dot"></div><div class="pin-dot"></div>
-    </div>
-
+    <div class="pin-dots"><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div></div>
     <div class="keypad">
-      <button class="keypad-key" data-key="1">1</button>
-      <button class="keypad-key" data-key="2">2</button>
-      <button class="keypad-key" data-key="3">3</button>
-      <button class="keypad-key" data-key="4">4</button>
-      <button class="keypad-key" data-key="5">5</button>
-      <button class="keypad-key" data-key="6">6</button>
-      <button class="keypad-key" data-key="7">7</button>
-      <button class="keypad-key" data-key="8">8</button>
-      <button class="keypad-key" data-key="9">9</button>
-      <button class="keypad-key empty"></button>
-      <button class="keypad-key" data-key="0">0</button>
-      <button class="keypad-key" data-key="del"><i class="fas fa-delete-left"></i></button>
+      <button class="keypad-key" data-key="1">1</button><button class="keypad-key" data-key="2">2</button><button class="keypad-key" data-key="3">3</button>
+      <button class="keypad-key" data-key="4">4</button><button class="keypad-key" data-key="5">5</button><button class="keypad-key" data-key="6">6</button>
+      <button class="keypad-key" data-key="7">7</button><button class="keypad-key" data-key="8">8</button><button class="keypad-key" data-key="9">9</button>
+      <button class="keypad-key empty"></button><button class="keypad-key" data-key="0">0</button><button class="keypad-key" data-key="del"><i class="fas fa-delete-left"></i></button>
     </div>
   </div>
 </div>
 
-<!-- CODE MODAL -->
 <div class="modal-overlay" id="codeModal">
   <div class="modal-panel" style="position:relative;">
     <button class="modal-close" id="codeClose"><i class="fas fa-xmark"></i></button>
     <div class="modal-handle"></div>
     <div class="modal-title">Enter transfer code</div>
-    <div class="modal-sub">Enter the code issued by SwiftTrust to authorize this transfer.</div>
-
+    <div class="modal-sub">Enter the code issued by PNB to authorize this transfer.</div>
     <div class="field">
       <label>Transfer code</label>
       <input type="text" id="codeInput" placeholder="Enter code" style="text-transform:uppercase;text-align:center;font-family:ui-monospace,monospace;font-size:1.1rem;letter-spacing:.15em;font-weight:700;" maxlength="12" autocomplete="off" />
     </div>
-
     <div class="form-alert" id="codeAlert"></div>
-
-    <button class="btn btn-primary btn-block btn-lg" id="codeSubmit">
-      Authorize transfer <i class="fas fa-shield-halved"></i>
-    </button>
+    <button class="btn btn-primary btn-block btn-lg" id="codeSubmit" style="background:var(--pnb-blue); color:#fff;">Authorize transfer <i class="fas fa-shield-halved"></i></button>
   </div>
 </div>
 
-<!-- SUCCESS -->
 <div class="success-overlay" id="successOverlay">
-  <svg class="success-check" viewBox="0 0 52 52">
-    <circle cx="26" cy="26" r="24"/>
-    <path d="M14 27 L22 35 L38 19"/>
-  </svg>
+  <svg class="success-check" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27 L22 35 L38 19"/></svg>
   <div class="success-title">Transfer sent</div>
   <div class="success-sub" id="successSub">—</div>
   <div class="success-amount" id="successAmount">—</div>
   <div class="success-ref" id="successRef">—</div>
   <div class="success-actions">
     <a href="dashboard.html" class="btn btn-outline btn-block">Dashboard</a>
-    <a href="history.html" class="btn btn-primary btn-block">View history</a>
+    <a href="history.html" class="btn btn-primary btn-block" style="background:var(--pnb-blue); color:#fff;">View history</a>
   </div>
 </div>
 
@@ -205,7 +158,6 @@
 <script>
 const FEE_RATE = 0.03;
 const $ = id => document.getElementById(id);
-
 let currentUid = null, userProfile = null, myAccounts = [];
 let pending = null, enteredPin = '';
 
@@ -218,13 +170,12 @@ function updateFee() {
   $('feeTotal').textContent = stbMoney(amt + fee);
 }
 
-// Verify recipient on blur
 $('toAccount').addEventListener('blur', async () => {
   const num = $('toAccount').value.trim();
   if (!/^\d{10}$/.test(num)) { $('recHint').textContent = 'Enter a 10-digit account number.'; $('recHint').style.color = ''; return; }
   try {
     const q = await db.collection('swifttrust_accounts').where('accountNumber', '==', num).limit(1).get();
-    if (q.empty) { $('recHint').textContent = 'No SwiftTrust account found with that number.'; $('recHint').style.color = 'var(--red)'; }
+    if (q.empty) { $('recHint').textContent = 'No PNB account found with that number.'; $('recHint').style.color = 'var(--red)'; }
     else {
       const a = q.docs[0].data();
       $('recHint').textContent = `✓ ${a.ownerName} — ${a.nickname || a.type}`;
@@ -249,7 +200,6 @@ auth.onAuthStateChanged(async (user) => {
     myAccounts.map(a => `<option value="${a.id}">${a.nickname || a.type} — ••••${String(a.accountNumber).slice(-4)} (${stbMoney(a.balance)})</option>`).join('');
 });
 
-// STEP 1 → REVIEW
 $('transferForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const alertEl = $('alert');
@@ -272,7 +222,6 @@ $('transferForm').addEventListener('submit', async (e) => {
   const total = amt + fee;
   if (Number(from.balance || 0) < total) { showErr(`Insufficient funds. You need ${stbMoney(total)}.`); return; }
 
-  // Look up recipient
   const q = await db.collection('swifttrust_accounts').where('accountNumber', '==', toNum).limit(1).get();
   if (q.empty) { showErr('Recipient account not found.'); return; }
   const recDoc = q.docs[0];
@@ -280,16 +229,12 @@ $('transferForm').addEventListener('submit', async (e) => {
   if (recDoc.id === from.id) { showErr('You cannot transfer to the same account.'); return; }
 
   pending = {
-    fromAccountId: from.id,
-    fromAccount: from,
-    toAccountId: recDoc.id,
-    toUid: rec.ownerId,
-    toAccountNumber: rec.accountNumber,
-    toAccountName: rec.ownerName,
+    fromAccountId: from.id, fromAccount: from,
+    toAccountId: recDoc.id, toUid: rec.ownerId,
+    toAccountNumber: rec.accountNumber, toAccountName: rec.ownerName,
     amount: amt, fee, total, description: desc
   };
 
-  // Fill review
   $('rvRecipient').textContent = rec.ownerName;
   $('rvAccount').textContent = rec.accountNumber;
   $('rvFrom').textContent = from.nickname || from.type;
@@ -300,28 +245,18 @@ $('transferForm').addEventListener('submit', async (e) => {
   document.body.style.overflow = 'hidden';
 });
 
-function showErr(msg) {
-  const a = $('alert');
-  a.textContent = msg;
-  a.className = 'form-alert show error';
-}
+function showErr(msg) { const a = $('alert'); a.textContent = msg; a.className = 'form-alert show error'; }
 
-// STEP 2 → PIN
-$('reviewClose').addEventListener('click', closeReview);
-$('reviewModal').addEventListener('click', e => { if (e.target.id === 'reviewModal') closeReview(); });
-function closeReview() { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; }
-
+$('reviewClose').addEventListener('click', () => { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; });
+$('reviewModal').addEventListener('click', e => { if (e.target.id === 'reviewModal') { $('reviewModal').classList.remove('show'); document.body.style.overflow = ''; } });
 $('reviewContinue').addEventListener('click', () => {
-  closeReview();
+  $('reviewModal').classList.remove('show');
   enteredPin = ''; updatePinDots();
   $('pinModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
 });
 
-// STEP 3 → CODE
-$('pinClose').addEventListener('click', closePin);
-$('pinModal').addEventListener('click', e => { if (e.target.id === 'pinModal') closePin(); });
-function closePin() { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; }
+$('pinClose').addEventListener('click', () => { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; });
+$('pinModal').addEventListener('click', e => { if (e.target.id === 'pinModal') { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; } });
 
 document.querySelectorAll('.keypad-key[data-key]').forEach(k => {
   k.addEventListener('click', () => {
@@ -333,30 +268,22 @@ document.querySelectorAll('.keypad-key[data-key]').forEach(k => {
   });
 });
 
-function updatePinDots() {
-  document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < enteredPin.length));
-}
+function updatePinDots() { document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < enteredPin.length)); }
 
 function verifyPin() {
   if (stbHashPin(enteredPin) !== userProfile.pinHash) {
     enteredPin = ''; updatePinDots();
-    stbToast('Incorrect PIN.', 'error');
-    return;
+    stbToast('Incorrect PIN.', 'error'); return;
   }
-  closePin();
-  // Move to code step
+  $('pinModal').classList.remove('show');
   $('codeInput').value = '';
   $('codeAlert').className = 'form-alert';
   $('codeModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
   setTimeout(() => $('codeInput').focus(), 300);
 }
 
-// STEP 4 → SUBMIT
-$('codeClose').addEventListener('click', closeCode);
-$('codeModal').addEventListener('click', e => { if (e.target.id === 'codeModal') closeCode(); });
-function closeCode() { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; }
-
+$('codeClose').addEventListener('click', () => { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; });
+$('codeModal').addEventListener('click', e => { if (e.target.id === 'codeModal') { $('codeModal').classList.remove('show'); document.body.style.overflow = ''; } });
 $('codeSubmit').addEventListener('click', doTransfer);
 $('codeInput').addEventListener('keydown', e => { if (e.key === 'Enter') doTransfer(); });
 
@@ -364,7 +291,6 @@ async function doTransfer() {
   const code = $('codeInput').value.trim().toUpperCase();
   const alertEl = $('codeAlert');
   alertEl.className = 'form-alert';
-
   if (!code) { alertEl.textContent = 'Enter your transfer code.'; alertEl.className = 'form-alert show error'; return; }
 
   $('codeSubmit').disabled = true;
@@ -402,8 +328,7 @@ async function doTransfer() {
       tx.update(codeRef, { used: true, usedAt: firebase.firestore.FieldValue.serverTimestamp(), usedBy: currentUid });
 
       tx.set(db.collection('swifttrust_transactions').doc(), {
-        reference,
-        type: 'internal',
+        reference, type: 'internal',
         fromUid: currentUid,
         fromAccountId: pending.fromAccountId,
         fromAccountNumber: fromData.accountNumber,
@@ -412,35 +337,27 @@ async function doTransfer() {
         toAccountId: pending.toAccountId,
         toAccountNumber: pending.toAccountNumber,
         toAccountName: pending.toAccountName,
-        amount: pending.amount,
-        fee: pending.fee,
-        total: pending.total,
+        amount: pending.amount, fee: pending.fee, total: pending.total,
         description: pending.description || null,
-        codeUsed: code,
-        status: 'completed',
+        codeUsed: code, status: 'completed',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
       tx.set(db.collection('swifttrust_transactions').doc(), {
-        reference: reference + '-FEE',
-        type: 'fee',
+        reference: reference + '-FEE', type: 'fee',
         fromUid: currentUid,
         fromAccountId: pending.fromAccountId,
         fromAccountNumber: fromData.accountNumber,
         fromAccountName: fromData.ownerName,
-        toAccountNumber: 'STB_REVENUE',
-        toAccountName: 'SwiftTrust Bank',
-        amount: pending.fee,
-        fee: 0,
-        total: pending.fee,
-        description: 'Transfer fee (3%)',
-        status: 'completed',
+        toAccountNumber: 'PNB_REVENUE', toAccountName: 'PNB',
+        amount: pending.fee, fee: 0, total: pending.fee,
+        description: 'Transfer fee (3%)', status: 'completed',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     });
 
-    closeCode();
-    $('successSub').textContent = `To ${pending.toAccountName} · ${pending.toAccountNumber}`;
+    $('codeModal').classList.remove('show');
+    $('successSub').textContent = 'To ' + pending.toAccountName + ' · ' + pending.toAccountNumber;
     $('successAmount').textContent = stbMoney(pending.amount);
     $('successRef').textContent = reference;
     $('successOverlay').classList.add('show');
@@ -455,7 +372,7 @@ async function doTransfer() {
 }
 
 function fireConfetti() {
-  const colors = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const colors = ['#002e7a', '#fcd116', '#15803d', '#8b5cf6'];
   for (let i = 0; i < 40; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
