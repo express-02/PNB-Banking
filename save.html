@@ -3,71 +3,43 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Save — SwiftTrust Bank</title>
+<title>Save — PNB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="style.css">
 <style>
-  .save-hero {
-    margin: 18px;
-    border-radius: var(--radius-xl);
-    background: linear-gradient(150deg, #064e3b, #059669 60%, #10b981);
-    color: #fff; padding: 24px;
-    position: relative; overflow: hidden;
-  }
-  .save-hero::after {
-    content: ''; position: absolute;
-    width: 260px; height: 260px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,.15), transparent 70%);
-    top: -100px; right: -80px;
-  }
+  .save-hero { margin: 18px; border-radius: 18px; background: var(--pnb-blue); color: #fff; padding: 24px; position: relative; overflow: hidden; box-shadow: 0 10px 25px rgba(0,46,122,.15); }
+  .save-hero::after { content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(252,209,22,.2), transparent 70%); top: -100px; right: -80px; }
   .save-hero-inner { position: relative; z-index: 1; }
-  .save-hero-label { font-size: .72rem; color: #a7f3d0; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
-  .save-hero-amount { font-size: 2.2rem; font-weight: 700; margin: 8px 0 4px; letter-spacing: -.02em; }
-  .save-hero-sub { font-size: .82rem; color: #a7f3d0; }
+  .save-hero-label { font-size: .72rem; color: var(--pnb-gold); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+  .save-hero-amount { font-size: 2.2rem; font-weight: 800; margin: 8px 0 4px; letter-spacing: -.02em; }
+  .save-hero-sub { font-size: .82rem; color: #b8c9e6; }
 
   .duration-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-  .duration-chip {
-    padding: 14px 8px; border-radius: 12px;
-    background: var(--bg); border: 1px solid var(--line);
-    font-family: inherit; font-weight: 600; font-size: .85rem;
-    color: var(--text-dim); cursor: pointer; text-align: center;
-    transition: .15s;
-  }
-  .duration-chip:hover { background: var(--blue-soft); border-color: var(--blue-line); color: var(--blue); }
-  .duration-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .duration-chip { padding: 14px 8px; border-radius: 12px; background: var(--pnb-bg); border: 1px solid var(--line); font-family: inherit; font-weight: 600; font-size: .85rem; color: var(--text-dim); cursor: pointer; text-align: center; transition: .15s; }
+  .duration-chip:hover { background: #fff9e6; border-color: #fce8a6; color: var(--pnb-gold-hover); }
+  .duration-chip.active { background: var(--pnb-blue); color: #fff; border-color: var(--pnb-blue); }
   .duration-chip small { display: block; font-size: .68rem; color: var(--text-faint); font-weight: 500; margin-top: 2px; }
-  .duration-chip.active small { color: #c7dbff; }
+  .duration-chip.active small { color: #b8c9e6; }
 
-  .save-card {
-    background: var(--panel); border: 1px solid var(--line);
-    border-radius: var(--radius-lg); padding: 18px;
-    margin-bottom: 12px;
-  }
+  .save-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-bottom: 12px; }
   .save-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .save-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 9px; border-radius: 999px;
-    font-size: .65rem; font-weight: 700; letter-spacing: .05em;
-  }
-  .save-badge.locked { background: var(--amber-soft); color: var(--amber); }
-  .save-badge.matured { background: var(--green-soft); color: var(--green); }
-  .save-progress {
-    height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 12px 0;
-  }
-  .save-progress-fill { height: 100%; background: linear-gradient(90deg, #10b981, #2563eb); border-radius: 999px; transition: width .4s; }
+  .save-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: .68rem; font-weight: 700; }
+  .save-badge.locked { background: #fff9e6; color: var(--pnb-gold-hover); }
+  .save-badge.matured { background: #dcfce7; color: #15803d; }
+  .save-progress { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 12px 0; }
+  .save-progress-fill { height: 100%; background: linear-gradient(90deg, var(--pnb-blue), var(--pnb-gold)); border-radius: 999px; transition: width .4s; }
 </style>
 </head>
 <body>
 
 <div class="mob-shell">
-
   <header class="mob-header">
     <div class="mob-header-inner">
-      <div class="mob-header-left">
+      <div style="display:flex; align-items:center; gap:12px;">
         <button class="mob-menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
-        <h1 style="font-size:1.05rem;">Save</h1>
+        <h1 style="font-size:1.05rem; color:var(--pnb-blue);">Save</h1>
       </div>
     </div>
   </header>
@@ -75,93 +47,67 @@
   <section class="save-hero">
     <div class="save-hero-inner">
       <div class="save-hero-label">Total locked</div>
-      <div class="save-hero-amount" id="totalLocked">$0.00</div>
+      <div class="save-hero-amount" id="totalLocked">₱0.00</div>
       <div class="save-hero-sub" id="lockCount">0 active saves · 4.5% APY</div>
     </div>
   </section>
 
   <div class="mob-pad">
-    <button class="btn btn-primary btn-block btn-lg" id="newLockBtn" style="margin-bottom:18px;">
+    <button class="btn btn-primary btn-block btn-lg" id="newLockBtn" style="margin-bottom:18px; background:var(--pnb-blue); color:#fff;">
       <i class="fas fa-lock"></i> Create new lock
     </button>
 
-    <div class="section-head-row" style="margin:0 0 12px;">
-      <h3>Your locks</h3>
-    </div>
-
+    <div style="margin:0 0 12px; font-weight:700; color:var(--pnb-blue);">Your locks</div>
     <div id="savesList">
       <div class="empty-state"><i class="fas fa-circle-notch fa-spin"></i><p>Loading…</p></div>
     </div>
 
-    <div class="card mt-3" style="background:var(--blue-soft);border-color:var(--blue-line);">
+    <div class="card mt-3" style="background:#fff9e6;border-color:#fce8a6;">
       <div style="display:flex;gap:12px;align-items:flex-start;">
-        <i class="fas fa-circle-info" style="color:var(--blue);margin-top:3px;"></i>
+        <i class="fas fa-circle-info" style="color:var(--pnb-gold-hover);margin-top:3px;"></i>
         <div style="font-size:.82rem;color:var(--text-dim);">
-          <strong style="color:var(--blue);">How it works:</strong> lock any amount for a fixed period to earn 4.5% APY. Funds stay locked until the maturity date, then return to your account when you release them.
+          <strong style="color:var(--pnb-blue);">How it works:</strong> lock any amount for a fixed period to earn 4.5% APY. Funds stay locked until the maturity date.
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <nav class="bottom-nav">
   <a href="dashboard.html" class="bottom-nav-item"><i class="fas fa-house"></i><span>Home</span></a>
   <a href="history.html" class="bottom-nav-item"><i class="fas fa-clock-rotate-left"></i><span>History</span></a>
   <a href="#" id="bottomNavMenu" class="bottom-nav-item"><i class="fas fa-bars"></i><span>Menu</span></a>
-  <a href="stocks.html" class="bottom-nav-item"><i class="fas fa-chart-line"></i><span>Stocks</span></a>
   <a href="profile.html" class="bottom-nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
 </nav>
 
-<!-- NEW LOCK MODAL -->
+<!-- MODAL: NEW LOCK -->
 <div class="modal-overlay" id="lockModal">
   <div class="modal-panel" style="position:relative;">
     <button class="modal-close" id="lockClose"><i class="fas fa-xmark"></i></button>
     <div class="modal-handle"></div>
     <div class="modal-title">Create a save lock</div>
     <div class="modal-sub">Choose an amount and duration. 4.5% APY.</div>
-
-    <div class="field">
-      <label>From account</label>
-      <select id="lockFrom"></select>
-    </div>
-
-    <div class="field">
-      <label>Amount (USD)</label>
-      <input type="number" id="lockAmount" placeholder="0.00" min="10" step="0.01" />
-      <div class="field-hint">Minimum $10.</div>
-    </div>
-
+    <div class="field"><label>From account</label><select id="lockFrom"></select></div>
+    <div class="field"><label>Amount (PHP)</label><input type="number" id="lockAmount" placeholder="0.00" min="10" step="0.01" /><div class="field-hint">Minimum ₱10.</div></div>
     <label style="display:block;font-size:.82rem;font-weight:600;margin-bottom:8px;">Duration</label>
     <div class="duration-grid" id="durationGrid">
-      <button class="duration-chip" data-days="7">7 days<small>0.3% APY</small></button>
+      <button class="duration-chip" data-days="7">7 days<small>0.2% APY</small></button>
       <button class="duration-chip active" data-days="30">30 days<small>4.5% APY</small></button>
       <button class="duration-chip" data-days="90">90 days<small>4.5% APY</small></button>
       <button class="duration-chip" data-days="180">6 months<small>4.5% APY</small></button>
       <button class="duration-chip" data-days="365">1 year<small>4.5% APY</small></button>
     </div>
-
-    <div style="background:var(--bg);border-radius:12px;padding:14px;margin:14px 0;" id="lockPreview">
-      <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;">
-        <span style="color:var(--text-dim);">Amount</span><span id="lpAmount">$0.00</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;">
-        <span style="color:var(--text-dim);">Matures</span><span id="lpMatures">—</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:6px;">
-        <span>Value at maturity</span><span id="lpValue">$0.00</span>
-      </div>
+    <div style="background:var(--pnb-bg);border-radius:12px;padding:14px;margin:14px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;"><span style="color:var(--text-dim);">Amount</span><span id="lpAmount">₱0.00</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:.88rem;padding:4px 0;"><span style="color:var(--text-dim);">Matures</span><span id="lpMatures">—</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;border-top:1px solid var(--line);padding-top:10px;margin-top:6px;color:var(--pnb-blue);"><span>Value at maturity</span><span id="lpValue">₱0.00</span></div>
     </div>
-
     <div class="form-alert" id="lockAlert"></div>
-
-    <button class="btn btn-primary btn-block btn-lg" id="lockSubmit">
-      <i class="fas fa-lock"></i> Lock funds
-    </button>
+    <button class="btn btn-primary btn-block btn-lg" id="lockSubmit" style="background:var(--pnb-blue); color:#fff;"><i class="fas fa-lock"></i> Lock funds</button>
   </div>
 </div>
 
-<!-- PIN MODAL -->
+<!-- MODAL: PIN -->
 <div class="modal-overlay" id="pinModal">
   <div class="modal-panel" style="position:relative;">
     <button class="modal-close" id="pinClose"><i class="fas fa-xmark"></i></button>
@@ -181,13 +127,11 @@
 <!-- SUCCESS -->
 <div class="success-overlay" id="successOverlay">
   <svg class="success-check" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27 L22 35 L38 19"/></svg>
-  <div class="success-title" id="successTitle">Funds locked</div>
+  <div class="success-title">Funds locked</div>
   <div class="success-sub" id="successSub">—</div>
   <div class="success-amount" id="successAmount">—</div>
   <div class="success-ref" id="successRef">—</div>
-  <div class="success-actions">
-    <a href="save.html" class="btn btn-primary btn-block">Back to Save</a>
-  </div>
+  <div class="success-actions"><a href="save.html" class="btn btn-primary btn-block" style="background:var(--pnb-blue); color:#fff;">Back to Save</a></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -199,10 +143,8 @@
 <script>
 const APY = 0.045;
 const $ = id => document.getElementById(id);
-
 let currentUid = null, userProfile = null, myAccounts = [], saves = [];
 let selectedDays = 30, enteredPin = '', pendingLock = null;
-let unsubSaves;
 
 auth.onAuthStateChanged(async (user) => {
   if (!user) { window.location.href = 'login.html'; return; }
@@ -216,19 +158,14 @@ auth.onAuthStateChanged(async (user) => {
   myAccounts = [];
   accSnap.forEach(doc => myAccounts.push({ id: doc.id, ...doc.data() }));
   const sel = $('lockFrom');
-  sel.innerHTML = myAccounts.map(a =>
-    `<option value="${a.id}">${a.nickname || a.type} — ••••${String(a.accountNumber).slice(-4)} (${stbMoney(a.balance)})</option>`
-  ).join('');
+  sel.innerHTML = myAccounts.map(a => `<option value="${a.id}">${a.nickname || a.type} — ••••${String(a.accountNumber).slice(-4)} (${stbMoney(a.balance)})</option>`).join('');
 
-  if (unsubSaves) unsubSaves();
-  unsubSaves = db.collection('swifttrust_saves')
-    .where('ownerId', '==', user.uid)
-    .onSnapshot(snap => {
-      saves = [];
-      snap.forEach(doc => saves.push({ id: doc.id, ...doc.data() }));
-      saves.sort((a, b) => (b.createdAt?.toDate?.()?.getTime?.() || 0) - (a.createdAt?.toDate?.()?.getTime?.() || 0));
-      renderSaves();
-    }, err => console.error(err));
+  db.collection('swifttrust_saves').where('ownerId', '==', user.uid).onSnapshot(snap => {
+    saves = [];
+    snap.forEach(doc => saves.push({ id: doc.id, ...doc.data() }));
+    saves.sort((a, b) => (b.createdAt?.toDate?.()?.getTime?.() || 0) - (a.createdAt?.toDate?.()?.getTime?.() || 0));
+    renderSaves();
+  });
 });
 
 document.querySelectorAll('.duration-chip').forEach(c => {
@@ -241,50 +178,33 @@ document.querySelectorAll('.duration-chip').forEach(c => {
 });
 
 $('lockAmount').addEventListener('input', updateLockPreview);
-
 function updateLockPreview() {
   const amt = Number($('lockAmount').value || 0);
-  const rate = selectedDays >= 30 ? APY : 0.003;
+  const rate = selectedDays >= 30 ? APY : 0.002;
   const interest = amt * rate * (selectedDays / 365);
-  const value = amt + interest;
   const matures = new Date(Date.now() + selectedDays * 86400000);
-
   $('lpAmount').textContent = stbMoney(amt);
-  $('lpMatures').textContent = matures.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  $('lpValue').textContent = stbMoney(value);
+  $('lpMatures').textContent = matures.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+  $('lpValue').textContent = stbMoney(amt + interest);
 }
 
-$('newLockBtn').addEventListener('click', () => {
-  $('lockAmount').value = '';
-  $('lockAlert').className = 'form-alert';
-  updateLockPreview();
-  $('lockModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
-});
+$('newLockBtn').addEventListener('click', () => { $('lockAmount').value = ''; $('lockAlert').className = 'form-alert'; updateLockPreview(); $('lockModal').classList.add('show'); document.body.style.overflow = 'hidden'; });
 $('lockClose').addEventListener('click', () => { $('lockModal').classList.remove('show'); document.body.style.overflow = ''; });
 $('lockModal').addEventListener('click', e => { if (e.target.id === 'lockModal') { $('lockModal').classList.remove('show'); document.body.style.overflow = ''; } });
 
 $('lockSubmit').addEventListener('click', () => {
   const fromId = $('lockFrom').value;
   const amt = Number($('lockAmount').value || 0);
-  const a = $('lockAlert');
-  a.className = 'form-alert';
+  const a = $('lockAlert'); a.className = 'form-alert';
 
   if (!fromId) { a.textContent = 'Select a source account.'; a.className = 'form-alert show error'; return; }
-  if (amt < 10) { a.textContent = 'Minimum lock is $10.'; a.className = 'form-alert show error'; return; }
+  if (amt < 10) { a.textContent = 'Minimum lock is ₱10.'; a.className = 'form-alert show error'; return; }
   const from = myAccounts.find(x => x.id === fromId);
-  if (!from) { a.textContent = 'Account not found.'; a.className = 'form-alert show error'; return; }
   if (Number(from.balance || 0) < amt) { a.textContent = 'Insufficient funds.'; a.className = 'form-alert show error'; return; }
 
-  const rate = selectedDays >= 30 ? APY : 0.003;
+  const rate = selectedDays >= 30 ? APY : 0.002;
   const interest = amt * rate * (selectedDays / 365);
-  pendingLock = {
-    fromAccountId: fromId, fromAccount: from,
-    amount: amt, days: selectedDays,
-    interest, maturityValue: amt + interest,
-    maturesAt: new Date(Date.now() + selectedDays * 86400000),
-    rate
-  };
+  pendingLock = { fromAccountId: fromId, fromAccount: from, amount: amt, days: selectedDays, interest, maturityValue: amt + interest, maturesAt: new Date(Date.now() + selectedDays * 86400000), rate };
 
   $('lockModal').classList.remove('show');
   enteredPin = ''; updatePinDots();
@@ -293,7 +213,6 @@ $('lockSubmit').addEventListener('click', () => {
 
 $('pinClose').addEventListener('click', () => { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; });
 $('pinModal').addEventListener('click', e => { if (e.target.id === 'pinModal') { $('pinModal').classList.remove('show'); document.body.style.overflow = ''; } });
-
 document.querySelectorAll('.keypad-key[data-key]').forEach(k => {
   k.addEventListener('click', () => {
     const key = k.dataset.key;
@@ -303,68 +222,35 @@ document.querySelectorAll('.keypad-key[data-key]').forEach(k => {
     if (enteredPin.length === 4) setTimeout(verifyPin, 220);
   });
 });
-
 function updatePinDots() { document.querySelectorAll('.pin-dot').forEach((d, i) => d.classList.toggle('filled', i < enteredPin.length)); }
 
 async function verifyPin() {
-  if (stbHashPin(enteredPin) !== userProfile.pinHash) {
-    enteredPin = ''; updatePinDots();
-    stbToast('Incorrect PIN.', 'error'); return;
-  }
+  if (stbHashPin(enteredPin) !== userProfile.pinHash) { enteredPin = ''; updatePinDots(); stbToast('Incorrect PIN.', 'error'); return; }
   $('pinModal').classList.remove('show');
-
   try {
     const reference = stbGenReference();
-
     await db.runTransaction(async (tx) => {
       const accRef = db.collection('swifttrust_accounts').doc(pendingLock.fromAccountId);
       const accSnap = await tx.get(accRef);
-      if (!accSnap.exists) throw new Error('Account not found.');
-      const accData = accSnap.data();
-      if (Number(accData.balance) < pendingLock.amount) throw new Error('Insufficient funds.');
-
-      tx.update(accRef, { balance: Number(accData.balance) - pendingLock.amount });
-
+      if (Number(accSnap.data().balance) < pendingLock.amount) throw new Error('Insufficient funds.');
+      tx.update(accRef, { balance: Number(accSnap.data().balance) - pendingLock.amount });
       tx.set(db.collection('swifttrust_saves').doc(), {
-        ownerId: currentUid,
-        fromAccountId: pendingLock.fromAccountId,
-        fromAccountNumber: accData.accountNumber,
-        amount: pendingLock.amount,
-        days: pendingLock.days,
-        rate: pendingLock.rate,
-        interest: pendingLock.interest,
-        maturityValue: pendingLock.maturityValue,
-        maturesAt: firebase.firestore.Timestamp.fromDate(pendingLock.maturesAt),
-        status: 'locked',
-        releasedAt: null,
-        reference,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        ownerId: currentUid, fromAccountId: pendingLock.fromAccountId, fromAccountNumber: accSnap.data().accountNumber,
+        amount: pendingLock.amount, days: pendingLock.days, rate: pendingLock.rate, interest: pendingLock.interest,
+        maturityValue: pendingLock.maturityValue, maturesAt: firebase.firestore.Timestamp.fromDate(pendingLock.maturesAt),
+        status: 'locked', releasedAt: null, reference, createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-
       tx.set(db.collection('swifttrust_transactions').doc(), {
-        reference, type: 'save_lock',
-        fromUid: currentUid,
-        fromAccountId: pendingLock.fromAccountId,
-        fromAccountNumber: accData.accountNumber,
-        fromAccountName: accData.ownerName,
-        toAccountNumber: 'STB_SAVE',
-        toAccountName: 'SwiftTrust Save',
-        amount: pendingLock.amount, fee: 0, total: pendingLock.amount,
-        description: `Locked for ${pendingLock.days} days`,
-        status: 'completed',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        reference, type: 'save_lock', fromUid: currentUid, fromAccountId: pendingLock.fromAccountId, fromAccountNumber: accSnap.data().accountNumber, fromAccountName: accSnap.data().ownerName,
+        toAccountNumber: 'PNB_SAVE', toAccountName: 'PNB Save', amount: pendingLock.amount, fee: 0, total: pendingLock.amount,
+        description: `Locked for ${pendingLock.days} days`, status: 'completed', createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     });
-
-    $('successSub').textContent = `${pendingLock.days} days · matures ${pendingLock.maturesAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    $('successSub').textContent = `${pendingLock.days} days · matures ${pendingLock.maturesAt.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}`;
     $('successAmount').textContent = stbMoney(pendingLock.amount);
     $('successRef').textContent = reference;
     $('successOverlay').classList.add('show');
-    fireConfetti();
-  } catch (err) {
-    console.error(err);
-    stbToast(err.message || 'Lock failed.', 'error');
-  }
+  } catch (err) { stbToast(err.message || 'Lock failed.', 'error'); }
 }
 
 function renderSaves() {
@@ -374,110 +260,53 @@ function renderSaves() {
   $('lockCount').textContent = locked.length + ' active save' + (locked.length === 1 ? '' : 's') + ' · 4.5% APY';
 
   const el = $('savesList');
-  if (saves.length === 0) {
-    el.innerHTML = `<div class="empty-state"><i class="fas fa-piggy-bank"></i><p>No saves yet. Create your first lock above.</p></div>`;
-    return;
-  }
+  if (saves.length === 0) { el.innerHTML = `<div class="empty-state"><i class="fas fa-piggy-bank"></i><p>No saves yet.</p></div>`; return; }
 
   const now = Date.now();
   el.innerHTML = saves.map(s => {
     const matures = s.maturesAt?.toDate ? s.maturesAt.toDate() : new Date(s.maturesAt);
     const created = s.createdAt?.toDate ? s.createdAt.toDate() : new Date();
-    const elapsed = now - created.getTime();
-    const total = matures.getTime() - created.getTime();
-    const pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
+    const pct = Math.min(100, Math.max(0, ((now - created.getTime()) / (matures.getTime() - created.getTime())) * 100));
     const matured = now >= matures.getTime() && s.status === 'locked';
     const isLocked = s.status === 'locked' && !matured;
 
     return `
       <div class="save-card">
         <div class="save-card-head">
-          <div>
-            <div style="font-weight:700;font-size:1rem;color:var(--ink);">${stbMoney(s.amount)}</div>
-            <div style="font-size:.72rem;color:var(--text-faint);margin-top:2px;">${s.days} days · ${(s.rate * 100).toFixed(2)}% APY</div>
-          </div>
-          <span class="save-badge ${isLocked ? 'locked' : matured ? 'matured' : 'matured'}">
-            <i class="fas fa-${isLocked ? 'lock' : 'check'}"></i>
-            ${isLocked ? 'Locked' : matured ? 'Ready to release' : 'Released'}
-          </span>
+          <div><div style="font-weight:700;font-size:1rem;color:var(--pnb-blue);">${stbMoney(s.amount)}</div><div style="font-size:.72rem;color:var(--text-faint);margin-top:2px;">${s.days} days · ${(s.rate * 100).toFixed(2)}% APY</div></div>
+          <span class="save-badge ${isLocked ? 'locked' : 'matured'}"><i class="fas fa-${isLocked ? 'lock' : 'check'}"></i> ${isLocked ? 'Locked' : matured ? 'Ready' : 'Released'}</span>
         </div>
         <div class="save-progress"><div class="save-progress-fill" style="width:${pct}%;"></div></div>
-        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-faint);">
-          <span>Started ${created.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-          <span>Matures ${matures.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-        </div>
-        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:.85rem;">
-          <span style="color:var(--text-dim);">Value at maturity</span>
-          <span style="font-weight:700;">${stbMoney(s.maturityValue)}</span>
-        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-faint);"><span>Started ${created.toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })}</span><span>Matures ${matures.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:.85rem;"><span style="color:var(--text-dim);">Value at maturity</span><span style="font-weight:700; color:var(--pnb-blue);">${stbMoney(s.maturityValue)}</span></div>
         ${matured ? `<button class="btn btn-success btn-block mt-2" data-release="${s.id}"><i class="fas fa-unlock"></i> Release to account</button>` : ''}
       </div>`;
   }).join('');
 
-  el.querySelectorAll('[data-release]').forEach(btn => {
-    btn.addEventListener('click', () => releaseLock(btn.dataset.release));
-  });
+  el.querySelectorAll('[data-release]').forEach(btn => btn.addEventListener('click', () => releaseLock(btn.dataset.release)));
 }
 
 async function releaseLock(saveId) {
   const s = saves.find(x => x.id === saveId);
-  if (!s) return;
   if (!confirm(`Release ${stbMoney(s.maturityValue)} back to your account?`)) return;
-
   try {
     const reference = stbGenReference();
-
     await db.runTransaction(async (tx) => {
       const accRef = db.collection('swifttrust_accounts').doc(s.fromAccountId);
       const saveRef = db.collection('swifttrust_saves').doc(saveId);
-      const accSnap = await tx.get(accRef);
-      const saveSnap = await tx.get(saveRef);
-      if (!accSnap.exists) throw new Error('Account not found.');
-      if (!saveSnap.exists) throw new Error('Save not found.');
-
-      const accData = accSnap.data();
-      const sData = saveSnap.data();
+      const accSnap = await tx.get(accRef); const saveSnap = await tx.get(saveRef);
       if (sData.status !== 'locked') throw new Error('Already released.');
-
-      const matures = sData.maturesAt.toDate();
-      if (Date.now() < matures.getTime()) throw new Error('Not yet matured.');
-
-      tx.update(accRef, { balance: Number(accData.balance) + Number(sData.maturityValue) });
+      tx.update(accRef, { balance: Number(accSnap.data().balance) + Number(saveSnap.data().maturityValue) });
       tx.update(saveRef, { status: 'released', releasedAt: firebase.firestore.FieldValue.serverTimestamp() });
-
       tx.set(db.collection('swifttrust_transactions').doc(), {
-        reference, type: 'save_release',
-        fromUid: null,
-        fromAccountNumber: 'STB_SAVE', fromAccountName: 'SwiftTrust Save',
-        toUid: currentUid,
-        toAccountId: s.fromAccountId, toAccountNumber: accData.accountNumber,
-        toAccountName: accData.ownerName,
-        amount: Number(sData.maturityValue), fee: 0, total: Number(sData.maturityValue),
-        description: 'Save lock matured',
-        status: 'completed',
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        reference, type: 'save_release', fromUid: null, fromAccountNumber: 'PNB_SAVE', fromAccountName: 'PNB Save',
+        toUid: currentUid, toAccountId: s.fromAccountId, toAccountNumber: accSnap.data().accountNumber, toAccountName: accSnap.data().ownerName,
+        amount: Number(saveSnap.data().maturityValue), fee: 0, total: Number(saveSnap.data().maturityValue),
+        description: 'Save lock matured', status: 'completed', createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
     });
-
     stbToast('Funds released.', 'success');
-  } catch (err) {
-    console.error(err);
-    stbToast(err.message || 'Release failed.', 'error');
-  }
-}
-
-function fireConfetti() {
-  const colors = ['#10b981', '#2563eb', '#f59e0b', '#8b5cf6'];
-  for (let i = 0; i < 40; i++) {
-    const p = document.createElement('div');
-    p.className = 'confetti-piece';
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.background = colors[Math.floor(Math.random() * colors.length)];
-    p.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
-    p.style.animationDelay = (Math.random() * 0.4) + 's';
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 3500);
-  }
+  } catch (err) { stbToast(err.message || 'Release failed.', 'error'); }
 }
 </script>
 </body>
