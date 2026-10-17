@@ -1,21 +1,19 @@
 /* ============================================================
-   SwiftTrust Bank — shared drawer component
-   Requires: firebase-config.js loaded before this file
+   PNB — shared drawer component
    ============================================================ */
 
 (function () {
-  // Only run if there's a hamburger on the page
   const menuBtn = document.getElementById('menuBtn');
   if (!menuBtn) return;
 
-  // ---- Navigation items ----
+  // Navigation links (Stocks removed, SwiftTrust changed to PNB)
   const NAV_MAIN = [
     { href: 'dashboard.html', icon: 'fa-house', label: 'Home' },
-    { href: 'transfer-internal.html', icon: 'fa-building-columns', label: 'To SwiftTrust' },
+    { href: 'transfer-internal.html', icon: 'fa-building-columns', label: 'To PNB' },
     { href: 'transfer-external.html', icon: 'fa-paper-plane', label: 'To Bank' },
     { href: 'save.html', icon: 'fa-lock', label: 'Save' },
-    { href: 'stocks.html', icon: 'fa-chart-line', label: 'Stocks' },
   ];
+  
   const NAV_OTHER = [
     { href: 'history.html', icon: 'fa-clock-rotate-left', label: 'Transaction History' },
     { href: 'notifications.html', icon: 'fa-bell', label: 'Notifications' },
@@ -33,7 +31,6 @@
     </a>`;
   }
 
-  // ---- Inject HTML ----
   const overlay = document.createElement('div');
   overlay.className = 'drawer-overlay';
   overlay.id = 'drawerOverlay';
@@ -44,11 +41,10 @@
   drawer.innerHTML = `
     <div class="drawer-head">
       <div class="drawer-head-inner">
-        <div class="drawer-avatar" id="drawerAvatar">—</div>
+        <div class="drawer-avatar" id="drawerAvatar" style="background: rgba(255,255,255,.15); border-color: rgba(252,209,22,.5); color: var(--pnb-gold);">—</div>
         <div class="drawer-user">
           <div class="drawer-user-name" id="drawerName">Loading…</div>
           <div class="drawer-user-email" id="drawerEmail">—</div>
-          <div class="drawer-user-badge"><i class="fas fa-circle"></i> Active Account</div>
         </div>
       </div>
     </div>
@@ -61,14 +57,13 @@
       <button class="drawer-signout" id="drawerSignOut">
         <i class="fas fa-arrow-right-from-bracket"></i><span>Sign out</span>
       </button>
-      <div class="drawer-version">SwiftTrust Bank v1.0</div>
+      <div class="drawer-version">PNB v1.0</div>
     </div>
   `;
 
   document.body.appendChild(overlay);
   document.body.appendChild(drawer);
 
-  // ---- Open / close ----
   function openDrawer() {
     overlay.classList.add('show');
     drawer.classList.add('show');
@@ -82,30 +77,19 @@
 
   menuBtn.addEventListener('click', openDrawer);
   overlay.addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeDrawer(); });
 
-  // Close on Escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeDrawer();
-  });
-
-  // Bottom-nav "Menu" tab also opens drawer (id="bottomNavMenu")
   const bottomMenu = document.getElementById('bottomNavMenu');
-  if (bottomMenu) {
-    bottomMenu.addEventListener('click', (e) => {
-      e.preventDefault();
-      openDrawer();
-    });
-  }
+  if (bottomMenu) bottomMenu.addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
 
-  // ---- Sign out ----
   document.getElementById('drawerSignOut').addEventListener('click', async () => {
     try { await auth.signOut(); } catch (e) {}
     window.location.href = 'login.html';
   });
 
-  // ---- Fill user info ----
   auth.onAuthStateChanged(async (user) => {
     if (!user) return;
+    // Fetching from swifttrust_users because we are using the US database
     const snap = await db.collection('swifttrust_users').doc(user.uid).get();
     if (!snap.exists) return;
     const d = snap.data();
