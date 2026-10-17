@@ -2,47 +2,204 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Open an account — SwiftTrust Bank</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Open an account — PNB</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* ============================================================
+     SIGNUP PAGE — Dedicated Layout
+     ============================================================ */
+  * { box-sizing: border-box; }
+  
+  body {
+    background: var(--pnb-bg);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .auth-container {
+    width: 100%;
+    max-width: 480px; /* Aligns perfectly with the dashboard width */
+    padding: 24px 16px 60px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header / Logo */
+  .auth-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    text-decoration: none;
+  }
+  .auth-brand:hover { text-decoration: none; }
+
+  /* Card */
+  .auth-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 46, 122, 0.06);
+    border: 1px solid var(--line);
+    padding: 32px 24px;
+    width: 100%;
+  }
+
+  .auth-card h1 {
+    font-size: 1.5rem;
+    color: var(--pnb-blue);
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+  }
+  .auth-card .sub {
+    color: var(--text-faint);
+    font-size: 0.88rem;
+    margin: 0 0 24px;
+  }
+
+  /* Form Elements */
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .field input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line-2);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: #fbfdff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field input:focus {
+    outline: none;
+    border-color: var(--pnb-blue);
+    box-shadow: 0 0 0 3px rgba(0, 46, 122, 0.12);
+  }
+  .field-hint {
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    margin-top: 4px;
+  }
+
+  /* Grid for side-by-side fields */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* Checkbox */
+  .check-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 20px 0;
+  }
+  .check-group input {
+    width: auto;
+    margin-top: 3px;
+    accent-color: var(--pnb-blue);
+  }
+  .check-group label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* Buttons & Links */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    background: var(--pnb-blue);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.12s;
+  }
+  .btn-submit:hover { background: var(--pnb-blue-light); }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+  .auth-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: var(--text-faint);
+  }
+  .auth-footer a {
+    font-weight: 700;
+    color: var(--pnb-blue);
+  }
+
+  /* Alerts */
+  .form-alert {
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .form-alert.show { display: block; }
+  .form-alert.error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+  .form-alert.success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+
+  /* Mobile adjustments */
+  @media (max-width: 400px) {
+    .field-row { grid-template-columns: 1fr; }
+    .auth-card { padding: 24px 18px; }
+  }
+</style>
 </head>
 <body>
 
-<div class="auth-shell">
+<div class="auth-container">
+  
+  <!-- Logo Header -->
+  <a href="index.html" class="auth-brand">
+    <svg viewBox="0 0 100 100" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 20 Q10 10 20 10 L80 10 Q90 10 90 20 L90 70 Q90 90 50 95 Q10 90 10 70 Z" fill="#002e7a"/>
+      <path d="M15 23 Q15 15 23 15 L77 15 Q85 15 85 23 L85 68 Q85 84 50 88 Q15 84 15 68 Z" fill="#ffffff"/>
+      <path d="M19 27 Q19 19 27 19 L50 19 L50 84.5 Q30 82 19 68 Z" fill="#2563eb"/>
+      <path d="M50 19 L73 19 Q81 19 81 27 L81 68 Q70 82 50 84.5 Z" fill="#dc2626"/>
+      <circle cx="50" cy="30" r="7" fill="#fcd116"/>
+      <path d="M40 23 l1.5 3 3.5 .5 -2.5 2.5 .5 3.5 -3 -1.5 -3 1.5 .5 -3.5 -2.5 -2.5 3.5 -.5 Z" fill="#fcd116"/>
+      <path d="M60 23 l1.5 3 3.5 .5 -2.5 2.5 .5 3.5 -3 -1.5 -3 1.5 .5 -3.5 -2.5 -2.5 3.5 -.5 Z" fill="#fcd116"/>
+      <path d="M30 45 Q35 40 40 45 Q45 50 40 60 Q35 65 30 60 Z" fill="#ffffff" opacity="0.9"/>
+      <path d="M70 45 Q65 40 60 45 Q55 50 60 60 Q65 65 70 60 Z" fill="#fcd116" opacity="0.9"/>
+    </svg>
+    <span class="pnb-logo-text" style="font-size: 1.8rem;">PNB</span>
+  </a>
 
-  <aside class="auth-side">
-    <div class="auth-side-inner">
-      <a href="index.html" class="brand">
-        <div class="brand-mark"><i class="fas fa-shield-halved"></i></div>
-        Swift<span>Trust</span>
-      </a>
-      <h2>Open your account in minutes.</h2>
-      <p>Join thousands of customers who trust SwiftTrust with their everyday banking.</p>
-    </div>
-    <ul class="auth-points">
-      <li><i class="fas fa-check-circle"></i> No monthly fees, no minimum balance</li>
-      <li><i class="fas fa-check-circle"></i> Instant transfers between accounts</li>
-      <li><i class="fas fa-check-circle"></i> Bank-grade encryption on every session</li>
-      <li><i class="fas fa-check-circle"></i> 24/7 customer support</li>
-    </ul>
-  </aside>
+  <!-- Signup Card -->
+  <div class="auth-card">
+    <h1>Create your account</h1>
+    <p class="sub">It only takes a few minutes to get started.</p>
 
-  <main class="auth-main">
-    <form class="auth-form" id="signupForm">
-      <h1>Create your account</h1>
-      <p class="sub">It only takes a few minutes to get started.</p>
+    <div class="form-alert" id="signupAlert"></div>
 
-      <div class="form-alert" id="signupAlert"></div>
-
-      <h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin-bottom:14px;">Personal information</h3>
-
+    <form id="signupForm">
+      
       <div class="field">
         <label>Full legal name</label>
-        <input type="text" id="fullName" placeholder="John A. Carter" required />
+        <input type="text" id="fullName" placeholder="Maria Santos" required />
       </div>
 
       <div class="field-row">
@@ -52,7 +209,7 @@
         </div>
         <div class="field">
           <label>Phone number</label>
-          <input type="tel" id="phone" placeholder="(555) 123-4567" required />
+          <input type="tel" id="phone" placeholder="+63 912 345 6789" required />
         </div>
       </div>
 
@@ -63,64 +220,60 @@
         </div>
         <div class="field">
           <label>ZIP / Postal code</label>
-          <input type="text" id="zip" placeholder="62704" maxlength="12" />
+          <input type="text" id="zip" placeholder="1200" maxlength="10" />
         </div>
       </div>
 
-      <h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin:22px 0 14px;">Home address</h3>
-
       <div class="field">
         <label>Street address</label>
-        <input type="text" id="street" placeholder="1234 Maple Avenue" required />
+        <input type="text" id="street" placeholder="123 Ayala Avenue" required />
       </div>
 
       <div class="field-row">
         <div class="field">
           <label>City</label>
-          <input type="text" id="city" placeholder="Springfield" required />
+          <input type="text" id="city" placeholder="Makati" required />
         </div>
         <div class="field">
-          <label>State / Region <span style="color:var(--text-faint);font-weight:400;">(optional)</span></label>
-          <input type="text" id="state" placeholder="e.g. California, Metro Manila" />
+          <label>State / Province <span style="font-weight:400;color:var(--text-faint)">(optional)</span></label>
+          <input type="text" id="state" placeholder="Metro Manila" />
         </div>
       </div>
-
-      <h3 style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin:22px 0 14px;">Security</h3>
 
       <div class="field">
         <label>Password</label>
         <input type="password" id="password" placeholder="At least 8 characters" minlength="8" required />
-        <div class="field-hint">Use a mix of letters, numbers, and symbols.</div>
       </div>
 
       <div class="field-row">
         <div class="field">
           <label>Transaction PIN</label>
           <input type="password" id="pin" placeholder="••••" maxlength="4" pattern="\d{4}" inputmode="numeric" required />
-          <div class="field-hint">4 digits. Required for every transfer.</div>
         </div>
         <div class="field">
           <label>Confirm PIN</label>
           <input type="password" id="pinConfirm" placeholder="••••" maxlength="4" pattern="\d{4}" inputmode="numeric" required />
         </div>
       </div>
+      <div class="field-hint" style="margin-top:-10px; margin-bottom:16px;">4 digits. Required for every transfer.</div>
 
-      <div class="field" style="display:flex;gap:10px;align-items:flex-start;">
-        <input type="checkbox" id="agree" style="width:auto;margin-top:4px;" required />
-        <label for="agree" style="font-weight:400;font-size:.82rem;color:var(--text-dim);">
-          I agree to the SwiftTrust Terms of Service and Privacy Policy.
+      <div class="check-group">
+        <input type="checkbox" id="agree" required />
+        <label for="agree">
+          I agree to the PNB Terms of Service and Privacy Policy.
         </label>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+      <button type="submit" class="btn-submit" id="submitBtn">
         <i class="fas fa-user-plus"></i> Create account
       </button>
 
-      <div class="auth-foot">
-        Already have an account? <a href="login.html">Sign in</a>
-      </div>
     </form>
-  </main>
+  </div>
+
+  <div class="auth-footer">
+    Already have an account? <a href="login.html">Log in</a>
+  </div>
 
 </div>
 
@@ -155,22 +308,19 @@ signupForm.addEventListener('submit', async (e) => {
   const pin = document.getElementById('pin').value.trim();
   const pinConfirm = document.getElementById('pinConfirm').value.trim();
 
-  // Client-side checks
   if (pin !== pinConfirm) { showAlert('Transaction PINs do not match.'); return; }
   if (!/^\d{4}$/.test(pin)) { showAlert('Transaction PIN must be exactly 4 digits.'); return; }
   if (password.length < 8) { showAlert('Password must be at least 8 characters.'); return; }
 
   submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating your account…';
+  submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Creating…';
 
   try {
-    // 1. Create Firebase Auth user
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     const uid = cred.user.uid;
-
     await cred.user.updateProfile({ displayName: fullName });
 
-    // 2. Create user profile doc
+    // 1. Create user doc
     await db.collection('swifttrust_users').doc(uid).set({
       uid,
       role: 'customer',
@@ -181,55 +331,38 @@ signupForm.addEventListener('submit', async (e) => {
       dob,
       address: { street, city, state, zip },
       pinHash: stbHashPin(pin),
-      currency: 'USD',
-      watchlist: [],
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    // 3. Create checking + savings accounts
     const routing = stbGenRoutingNumber();
 
-    const checkingRef = db.collection('swifttrust_accounts').doc();
-    await checkingRef.set({
-      ownerId: uid,
-      ownerName: fullName,
-      type: 'checking',
-      nickname: 'Everyday Checking',
-      accountNumber: stbGenAccountNumber(),
-      routingNumber: routing,
-      balance: 0,
-      currency: 'USD',
-      status: 'active',
+    // 2. Create Checking Account
+    await db.collection('swifttrust_accounts').doc().set({
+      ownerId: uid, ownerName: fullName,
+      type: 'checking', nickname: 'Everyday Checking',
+      accountNumber: stbGenAccountNumber(), routingNumber: routing,
+      balance: 0, currency: 'PHP', status: 'active',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    const savingsRef = db.collection('swifttrust_accounts').doc();
-    await savingsRef.set({
-      ownerId: uid,
-      ownerName: fullName,
-      type: 'savings',
-      nickname: 'High-Yield Savings',
-      accountNumber: stbGenAccountNumber(),
-      routingNumber: routing,
-      balance: 0,
-      currency: 'USD',
-      status: 'active',
+    // 3. Create Savings Account
+    await db.collection('swifttrust_accounts').doc().set({
+      ownerId: uid, ownerName: fullName,
+      type: 'savings', nickname: 'High-Yield Savings',
+      accountNumber: stbGenAccountNumber(), routingNumber: routing,
+      balance: 0, currency: 'PHP', status: 'active',
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
-    // 4. Sign out so they can log in fresh
     await auth.signOut();
-
     showAlert('Account created. Redirecting to sign in…', 'success');
     setTimeout(() => { window.location.href = 'login.html'; }, 1200);
 
   } catch (err) {
     console.error(err);
-    let msg = 'Something went wrong. Please try again.';
-    if (err.code === 'auth/email-already-in-use') msg = 'That email is already registered. Try signing in instead.';
-    else if (err.code === 'auth/invalid-email') msg = 'Please enter a valid email address.';
+    let msg = 'Something went wrong.';
+    if (err.code === 'auth/email-already-in-use') msg = 'That email is already registered. Try logging in.';
     else if (err.code === 'auth/weak-password') msg = 'Please choose a stronger password.';
-    else if (err.code === 'permission-denied') msg = 'Database permission error. Contact support.';
     showAlert(msg);
   } finally {
     submitBtn.disabled = false;
